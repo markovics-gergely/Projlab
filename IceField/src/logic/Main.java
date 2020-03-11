@@ -15,6 +15,6 @@ public class Main {
         hm.remove("lol", 4);
         hm.remove("lol", 1);
         hm.remove("lol", 2);
-        System.out.println(hm.getOrDefault("lol", 2));
+        System.out.println(hm.get("lol"));
     }
 }

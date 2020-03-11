@@ -1,6 +1,7 @@
 package logic.characters;
 
 import logic.icecells.IceCell;
+import logic.items.EssentialItem;
 import logic.items.Items;
 import logic.items.PlayerActions;
 import logic.Way;
@@ -20,9 +21,24 @@ public abstract class Character {
 
 	public abstract void ability();
 
-	public void move() { }
-	public void dig(boolean withShovel) { }
-	public void mine() { }
+	Character(int mb, IceCell ic){
+		maxBodyHeat = mb;
+		bodyHeat = mb;
+		ownCell = ic;
+		backpack = new BackPack();
+	}
+
+	public void move() {
+		IceCell ic = ownCell.getNeighbour(facingWay);
+		if(ic != null){
+			ownCell.removeCharacter(this);
+			ic.accept(this);
+		}
+	}
+	public void dig(boolean withShovel) {
+		ownCell.loseSnow(withShovel);
+	}
+	public void mine() { ownCell.mine(this); }
 	public void gainOneHeat() {
 		bodyHeat++;
 		if(bodyHeat > maxBodyHeat) bodyHeat = maxBodyHeat;
@@ -41,7 +57,14 @@ public abstract class Character {
 	public boolean getDivingSuit() { return wearingDivingSuit;}
 	public void setFacingWay(Way w) { facingWay = w;}
 	public Way getFacingWay() { return facingWay;}
-	public void useItem(PlayerActions ia) { }
-	public void useEssentials() { }
+	public void useItem(PlayerActions pa) {
+		Items i = backpack.hasItem(pa);
+		if(i != null) i.use(this);
+	}
+	public void useEssentials() {
+		Items ei = backpack.hasItem(PlayerActions.assemblingEssentials);
+		if(ei != null) ei.use(this);
+	}
 	public int getBodyHeat() { return bodyHeat;}
+	public BackPack getBackPack(){ return backpack; }
 }

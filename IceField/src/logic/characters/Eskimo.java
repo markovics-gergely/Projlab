@@ -1,7 +1,13 @@
 package logic.characters;
 
-public class Eskimo extends Character {
-	private int maxBodyHeat = 5;
+import logic.icecells.IceCell;
 
-	public void ability() { }
+public class Eskimo extends Character {
+
+	public Eskimo(IceCell ic){
+		super(5, ic);
+	}
+	public void ability() {
+		getOwnCell().setIgloo(true);
+	}
 }

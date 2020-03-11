@@ -6,16 +6,23 @@ import logic.characters.Character;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public abstract class IceCell {
-	private int capacity;
+	protected int capacity;
 	private boolean capacityKnown = false;
 	protected int snow;
-	private static int maxSnow = 5;
+	protected static int maxSnow = 5;
 	private HashMap<Way, IceCell> neighbours = new HashMap<>();
 	protected ArrayList<Character> standingPlayers;
-	private IceField ownField;
+	protected IceField ownField;
 
+	public IceCell(int c, IceField icef){
+		Random r = new Random();
+		snow = r.nextInt(maxSnow + 1);
+		capacity = c;
+		ownField = icef;
+	}
 	public void setOwnField(IceField icef) {ownField = icef;}
 	public void setCapacityKnown() { capacityKnown = true;}
 	public void loseSnow(boolean withShovel) {
@@ -35,10 +42,10 @@ public abstract class IceCell {
 	}
 	public void removeCharacter(Character ch) { standingPlayers.remove(ch); }
 	public void addCharacter(Character ch) { standingPlayers.add(ch); }
-	public void mine(Character actual) { }
-	public void movePlayerOut(Way from) { }
-	public void setIgloo(boolean b) {}
 
+	public void movePlayerOut(Way from) {}
+	public void mine(Character actual) {}
+	public void setIgloo(boolean b) {}
 	public abstract void accept(Character ch);
 	public abstract void snowing();
 }

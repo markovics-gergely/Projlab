@@ -1,7 +1,15 @@
 package logic.characters;
 
-public class Explorer extends Character {
-	private int maxBodyHeat = 4;
+import logic.Way;
+import logic.icecells.IceCell;
 
-	public void ability() { }
+public class Explorer extends Character {
+
+	public Explorer(IceCell ic){
+		super(4, ic);
+	}
+	public void ability() {
+		IceCell ic = getOwnCell().getNeighbour(getFacingWay());
+		if(ic != null) ic.setCapacityKnown();
+	}
 }
