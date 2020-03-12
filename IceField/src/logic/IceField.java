@@ -19,6 +19,19 @@ public class IceField {
 	private ArrayList<Character> characters;
 	private WinChecker wc;
 
+	private void snowStorm() { }
+	public void addIceCell(IceCell ic) { }
+	public void removeIceCell(IceCell ic) { }
+	private void gameLost() { gameLost = true; }
+	private void gameWon() { gameWon = true; }
+	private void actionHandler(){
+		actionsLeft--;
+		if(actionsLeft == 0){
+			actionsLeft = maxActions;
+			nextPlayer();
+		}
+	}
+
 	public void nextPlayer() {
 		currentPlayer++;
 		Random r = new Random();
@@ -34,10 +47,21 @@ public class IceField {
 				gameLost();
 		}
 	}
-	private void snowStorm() { }
-	public void movePlayer() { characters.get(currentPlayer).move(); }
-	public void usePlayerItem(PlayerActions pa) { characters.get(currentPlayer).useItem(pa);}
-	public void useAbility() { characters.get(currentPlayer).ability(); }
+	public void setPlayerWay(Way w) {
+		characters.get(currentPlayer).setFacingWay(w);
+	}
+	public void usePlayerItem(PlayerActions pa) {
+		characters.get(currentPlayer).useItem(pa);
+		actionHandler();
+	}
+	public void useAbility() {
+		characters.get(currentPlayer).ability();
+		actionHandler();
+	}
+	public void movePlayer() {
+		characters.get(currentPlayer).move();
+		actionHandler();
+	}
 	public void useEssentialItems() {
 		IceCell ic = characters.get(0).getOwnCell();
 
@@ -53,15 +77,10 @@ public class IceField {
 			gameWon();
 		else
 			wc.resetAssembledItems();
+		actionHandler();
 	}
-	public void addIceCell(IceCell ic) { }
-	public void removeIceCell(IceCell ic) { }
 	public void mineActualCell() {
 		characters.get(currentPlayer).mine();
+		actionHandler();
 	}
-	public void setPlayerWay(Way w) {
-		characters.get(currentPlayer).setFacingWay(w);
-	}
-	private void gameLost() { gameLost = true; }
-	private void gameWon() { gameWon = true; }
 }
