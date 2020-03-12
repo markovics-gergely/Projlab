@@ -2,6 +2,7 @@ package logic;
 
 import logic.characters.Character;
 import logic.icecells.IceCell;
+import logic.icecells.StableIceCell;
 import logic.items.PlayerActions;
 
 import java.util.ArrayList;
@@ -18,6 +19,23 @@ public class IceField {
 	private ArrayList<ArrayList<IceCell>> field;
 	private ArrayList<Character> characters;
 	private WinChecker wc;
+
+	private void buildCells(){
+		for(int y = 0; y < fieldLengths; y++)
+			for(int x = 0; x < fieldLengths; x++){
+				field.get(y).add(x, new StableIceCell(this));
+			}
+		for(int y = 0; y < fieldLengths; y++)
+			for(int x = 0; x < fieldLengths; x++){
+				buildNeighbours(field.get(y).get(x), y, x);
+			}
+	}
+	private void buildNeighbours(IceCell ic, int y, int x){
+		if(y != 0) ic.addNeighbour(Way.up, field.get(y - 1).get(x));
+		if(y != fieldLengths - 1) ic.addNeighbour(Way.down, field.get(y + 1).get(x));
+		if(x != 0) ic.addNeighbour(Way.left, field.get(y).get(x - 1));
+		if(x != fieldLengths - 1) ic.addNeighbour(Way.right, field.get(y).get(x + 1));
+	}
 
 	private void snowStorm() {
 		Random r = new Random();
