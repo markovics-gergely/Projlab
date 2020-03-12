@@ -19,7 +19,26 @@ public class IceField {
 	private ArrayList<Character> characters;
 	private WinChecker wc;
 
-	private void snowStorm() { }
+	private void snowStorm() {
+		Random r = new Random();
+		int x = r.nextInt(fieldLengths);
+		int y = r.nextInt(fieldLengths);
+		IceCell rootCell = field.get(y).get(x);
+		int radius = (int)(Math.ceil(((double)fieldLengths)/2));
+		snow(radius, Way.up, rootCell, false);
+		snow(radius, Way.right, rootCell, true);
+		snow(radius, Way.down, rootCell, false);
+		snow(radius, Way.left, rootCell, true);
+	}
+	private void snow(int seqNum, Way to, IceCell from, boolean subroot){
+		if(seqNum == 0) return;
+		from.snowing();
+		snow(--seqNum, to, from.getNeighbour(to), subroot);
+		if(subroot){
+			snow(--seqNum, to.Rotate(true), from.getNeighbour(to.Rotate(true)), false);
+			snow(--seqNum, to.Rotate(false), from.getNeighbour(to.Rotate(false)), false);
+		}
+	}
 	public void addIceCell(IceCell ic) { }
 	public void removeIceCell(IceCell ic) { }
 	private void gameLost() { gameLost = true; }
