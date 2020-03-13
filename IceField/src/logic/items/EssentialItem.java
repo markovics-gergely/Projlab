@@ -12,4 +12,5 @@ public class EssentialItem implements Items {
 		wc.addEssentials(sum);
 	}
 	public boolean equip(Character ch) { return ch.putItemtoBackPack(this, PlayerActions.assemblingEssentials);}
+	public EssentialItem(int id){ ID = id; }
 }

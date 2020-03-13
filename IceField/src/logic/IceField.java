@@ -5,7 +5,7 @@ import logic.icecells.IceCell;
 import logic.icecells.StableIceCell;
 import logic.icecells.UnstableIceCell;
 import logic.icecells.WaterCell;
-import logic.items.PlayerActions;
+import logic.items.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -75,15 +75,45 @@ public class IceField {
 			}
 			confTable[y][x] = 2;
 		}
+		int max = 0;
+		int essentialID = 0;
+		for (PlayerActions pa : PlayerActions.values()) {
+			max = (pa == PlayerActions.eating) ? 2 * maxPlayer : maxPlayer - 1;
+			if (pa == PlayerActions.assemblingEssentials) max = 3;
+			for (int i = 1; i < max; i++) {
+				while (confTable[y][x] != 0) {
+					x = random.nextInt(fieldLengths);
+					y = random.nextInt(fieldLengths);
+				}
+				confTable[y][x] = 3;
+				placeItem(pa, y, x, essentialID);
+				if(pa == PlayerActions.assemblingEssentials) essentialID++;
+			}
+		}
 	}
-
-
+	private void placeItem(PlayerActions pa, int y, int x, int essentialID){
+		Items item;
+		switch (pa){
+			case eating: item = new Food(); break;
+			case shovelling: item = new Shovel(); break;
+			case wearingSuit: item = new Divingsuit(); break;
+			case savingWithRope: item = new Rope(); break;
+			default: item = new EssentialItem(essentialID); break;
+		}
+		StableIceCell newCell = new StableIceCell(this, item);
+		buildNeighbours(newCell, y, x);
+		for(Way w : Way.values()){
+			if(newCell.getNeighbour(w) != null)
+				newCell.getNeighbour(w).addNeighbour(w.opposite(), newCell);
+		}
+	}
 	private void snowStorm() {
 		Random r = new Random();
 		int x = r.nextInt(fieldLengths);
 		int y = r.nextInt(fieldLengths);
 		IceCell rootCell = field.get(y).get(x);
 		int radius = (int)(Math.ceil(((double)fieldLengths)/2));
+
 		snow(radius, Way.up, rootCell, false);
 		snow(radius, Way.right, rootCell, true);
 		snow(radius, Way.down, rootCell, false);
