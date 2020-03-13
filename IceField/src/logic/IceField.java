@@ -124,8 +124,8 @@ public class IceField {
 		from.snowing();
 		snow(--seqNum, to, from.getNeighbour(to), subroot);
 		if(subroot){
-			snow(--seqNum, to.Rotate(true), from.getNeighbour(to.Rotate(true)), false);
-			snow(--seqNum, to.Rotate(false), from.getNeighbour(to.Rotate(false)), false);
+			snow(--seqNum, to.rotate(true), from.getNeighbour(to.rotate(true)), false);
+			snow(--seqNum, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
 	}
 	public void addIceCell(IceCell ic) { }
