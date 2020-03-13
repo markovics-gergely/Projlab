@@ -7,6 +7,10 @@ public class EssentialItem implements Items {
 	private int ID;
 	private WinChecker wc;
 
+	public EssentialItem(int id){
+		ID = id;
+	}
+
 	public void use(Character actualch) {
 		int sum = actualch.getBackPack().getEssentialItemNumber();
 		wc.addEssentials(sum);
