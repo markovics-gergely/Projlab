@@ -21,7 +21,7 @@ public enum Way {
             case right: return toRight ? down : up;
             case down: return toRight ? left : right;
             case left: return toRight ? up : down;
-            default: throw new IllegalStateException("This should never happen: " + this + " has no opposite.");
+            default: throw new IllegalStateException("This should never happen: " + this + " can't be rotated.");
         }
     }
 }

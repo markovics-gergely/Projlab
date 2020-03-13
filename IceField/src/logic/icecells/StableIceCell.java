@@ -9,8 +9,9 @@ public class StableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
 	private Items item;
 
-	public StableIceCell(IceField icef){
+	public StableIceCell(IceField icef, Items i){
 		super(maxSnow, icef);
+		item = i;
 	}
 
 	private void removeItem() { item = null;}

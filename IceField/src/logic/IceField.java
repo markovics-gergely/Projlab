@@ -3,6 +3,8 @@ package logic;
 import logic.characters.Character;
 import logic.icecells.IceCell;
 import logic.icecells.StableIceCell;
+import logic.icecells.UnstableIceCell;
+import logic.icecells.WaterCell;
 import logic.items.PlayerActions;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class IceField {
 	private void buildCells(){
 		for(int y = 0; y < fieldLengths; y++)
 			for(int x = 0; x < fieldLengths; x++){
-				field.get(y).add(x, new StableIceCell(this));
+				field.get(y).add(x, new StableIceCell(this, null));
 			}
 		for(int y = 0; y < fieldLengths; y++)
 			for(int x = 0; x < fieldLengths; x++){
@@ -36,6 +38,45 @@ public class IceField {
 		if(x != 0) ic.addNeighbour(Way.left, field.get(y).get(x - 1));
 		if(x != fieldLengths - 1) ic.addNeighbour(Way.right, field.get(y).get(x + 1));
 	}
+
+	private void configureCells(int waterCount, int unstableCount){
+		int[][] confTable = new int[fieldLengths][fieldLengths];
+		for(int j = 0; j < fieldLengths; j++)
+			for(int i = 0; i < fieldLengths; i++)
+				confTable[j][i] = 0;
+		Random random = new Random();
+		int x = random.nextInt(fieldLengths);
+		int y = random.nextInt(fieldLengths);
+		for(int i = 0; i < waterCount; i++){
+			while(confTable[y][x] != 0){
+				x = random.nextInt(fieldLengths);
+				y = random.nextInt(fieldLengths);
+			}
+			WaterCell water = new WaterCell(this);
+			field.get(y).add(x, water);
+			buildNeighbours(water, y, x);
+			for(Way w : Way.values()){
+				if(water.getNeighbour(w) != null)
+					water.getNeighbour(w).addNeighbour(w.opposite(), water);
+			}
+			confTable[y][x] = 1;
+		}
+		for(int i = 0; i < unstableCount; i++){
+			while(confTable[y][x] != 0){
+				x = random.nextInt(fieldLengths);
+				y = random.nextInt(fieldLengths);
+			}
+			UnstableIceCell unstable = new UnstableIceCell(random.nextInt(maxPlayer - 2) + 2, this);
+			field.get(y).add(x, unstable);
+			buildNeighbours(unstable, y, x);
+			for(Way w : Way.values()){
+				if(unstable.getNeighbour(w) != null)
+					unstable.getNeighbour(w).addNeighbour(w.opposite(), unstable);
+			}
+			confTable[y][x] = 2;
+		}
+	}
+
 
 	private void snowStorm() {
 		Random r = new Random();
