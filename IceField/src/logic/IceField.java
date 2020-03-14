@@ -12,19 +12,27 @@ import java.util.Random;
 
 public class IceField {
 	private static int maxPlayer;
-	private static int fieldLengths = maxPlayer + 4;
+	private static int fieldLengths;
 	private int currentPlayer;
-	public int actionsLeft;
+	public int actionsLeft = 4;
 	public static int maxActions = 4;
 	private boolean gameWon = false;
 	private boolean gameLost = false;
-	private ArrayList<ArrayList<IceCell>> field;
+	private ArrayList<ArrayList<IceCell>> field = new ArrayList<ArrayList<IceCell>>(fieldLengths);
 	private ArrayList<Character> characters;
 	private WinChecker wc;
+
+	public IceField(int mplayer){
+		maxPlayer = mplayer;
+		fieldLengths = maxPlayer + 4;
+		buildCells();
+		configureCells(20, 20);
+	}
 
 	private void buildCells(){
 		for(int y = 0; y < fieldLengths; y++)
 			for(int x = 0; x < fieldLengths; x++){
+				field.add(new ArrayList<>(fieldLengths));
 				field.get(y).add(x, new StableIceCell(this, null));
 			}
 		for(int y = 0; y < fieldLengths; y++)
@@ -60,6 +68,21 @@ public class IceField {
 					water.getNeighbour(w).addNeighbour(w.opposite(), water);
 			}
 			confTable[y][x] = 1;
+			int connected = 0;
+			if(y + 1 < fieldLengths - 1 && confTable[y + 1][x] != 1) connected = checkIslands(confTable, y + 1, x);
+			else if(x + 1 < fieldLengths - 1 && confTable[y][x + 1] != 1) connected = checkIslands(confTable, y, x + 1);
+			else if(y - 1 > 0 && confTable[y - 1][x] != 1) connected = checkIslands(confTable, y - 1, x);
+			else if(x - 1 > 0 && confTable[y][x - 1] != 1) connected = checkIslands(confTable, y, x - 1);
+			resetIslands(confTable);
+			if(connected != 0 && connected != fieldLengths*fieldLengths - i - 1){
+				confTable[y][x] = 0;
+				i--;
+				x = random.nextInt(fieldLengths);
+				y = random.nextInt(fieldLengths);
+			}
+
+			System.out.println(i + " " + connected);
+			connected = 0;
 		}
 		for(int i = 0; i < unstableCount; i++){
 			while(confTable[y][x] != 0){
@@ -90,6 +113,10 @@ public class IceField {
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
+		for(int[] j : confTable) {
+			for (int i : j) System.out.print(i + " ");
+			System.out.println();
+		}
 	}
 	private void placeItem(PlayerActions pa, int y, int x, int essentialID){
 		Items item;
@@ -107,6 +134,19 @@ public class IceField {
 				newCell.getNeighbour(w).addNeighbour(w.opposite(), newCell);
 		}
 	}
+	private int checkIslands(int[][] confTable, int y, int x){
+		if(y < 0 || y > fieldLengths - 1 || x < 0 || x > fieldLengths - 1) return 0;
+		if(confTable[y][x] == 1 || confTable[y][x] >= 10) return 0;
+		confTable[y][x] += 10;
+		return 1 + checkIslands(confTable, y + 1, x) + checkIslands(confTable, y - 1, x) + checkIslands(confTable, y, x + 1) + checkIslands(confTable, y, x - 1);
+	}
+	private void resetIslands(int[][] confTable) {
+		for (int j = 0; j < fieldLengths; j++){
+			for (int i = 0; i < fieldLengths; i++){
+				if(confTable[j][i] >= 10) confTable[j][i] -= 10;
+			}
+		}
+	}
 	private void snowStorm() {
 		Random r = new Random();
 		int x = r.nextInt(fieldLengths);
@@ -114,13 +154,14 @@ public class IceField {
 		IceCell rootCell = field.get(y).get(x);
 		int radius = (int)(Math.ceil(((double)fieldLengths)/2));
 
-		snow(radius, Way.up, rootCell, false);
-		snow(radius, Way.right, rootCell, true);
-		snow(radius, Way.down, rootCell, false);
-		snow(radius, Way.left, rootCell, true);
+		int i = 0;
+		rootCell.snowing();
+		for(Way w : Way.values()){
+			snow(radius, w, rootCell.getNeighbour(w), i++ % 2 == 1);
+		}
 	}
 	private void snow(int seqNum, Way to, IceCell from, boolean subroot){
-		if(seqNum == 0) return;
+		if(seqNum == 0 || from == null) return;
 		from.snowing();
 		snow(--seqNum, to, from.getNeighbour(to), subroot);
 		if(subroot){
