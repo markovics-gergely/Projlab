@@ -8,37 +8,51 @@ import logic.icecells.WaterCell;
 import logic.items.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class IceField {
 	private static int maxPlayer;
 	private static int fieldLengths;
-	private int currentPlayer;
+	private int currentPlayer = 0;
 	public int actionsLeft = 4;
 	public static int maxActions = 4;
 	private boolean gameWon = false;
 	private boolean gameLost = false;
-	private ArrayList<ArrayList<IceCell>> field = new ArrayList<ArrayList<IceCell>>(fieldLengths);
+	private List<List<IceCell>> field = new ArrayList<>();
 	private ArrayList<Character> characters;
-	private WinChecker wc;
+	private WinChecker wc = new WinChecker();
 
-	public IceField(int mplayer){
-		maxPlayer = mplayer;
+	public IceField(ArrayList<Character> c){
+		maxPlayer = c.size();
 		fieldLengths = maxPlayer + 4;
+		characters = c;
+
 		buildCells();
-		configureCells(20, 20);
 	}
 
+	//Pálya építéséhez szolgáló fv-ek
 	private void buildCells(){
-		for(int y = 0; y < fieldLengths; y++)
-			for(int x = 0; x < fieldLengths; x++){
-				field.add(new ArrayList<>(fieldLengths));
-				field.get(y).add(x, new StableIceCell(this, null));
+		for(int y = 0; y < fieldLengths; y++)  {
+			List<IceCell> a = new ArrayList<>();
+			for(int x = 0; x < fieldLengths; x++) {
+				a.add(new StableIceCell(this, null));
 			}
+			field.add(a);
+		}
+
 		for(int y = 0; y < fieldLengths; y++)
-			for(int x = 0; x < fieldLengths; x++){
+			for(int x = 0; x < fieldLengths; x++)
 				buildNeighbours(field.get(y).get(x), y, x);
-			}
+
+		int numberOfWater, numberOfUnstable;
+		switch(maxPlayer){
+			case 6 : numberOfWater = 20; numberOfUnstable = 30; break;
+			case 5 : numberOfWater = 18; numberOfUnstable = 27; break;
+			case 4 : numberOfWater = 8;  numberOfUnstable = 16; break;
+			default: numberOfWater = 7;  numberOfUnstable = 14; break;
+		}
+		configureCells(numberOfWater, numberOfUnstable);
 	}
 	private void buildNeighbours(IceCell ic, int y, int x){
 		if(y != 0) ic.addNeighbour(Way.up, field.get(y - 1).get(x));
@@ -46,16 +60,18 @@ public class IceField {
 		if(x != 0) ic.addNeighbour(Way.left, field.get(y).get(x - 1));
 		if(x != fieldLengths - 1) ic.addNeighbour(Way.right, field.get(y).get(x + 1));
 	}
-
-	private void configureCells(int waterCount, int unstableCount){
+	private void configureCells(int numberOfWater, int numberOfUnstable) {
 		int[][] confTable = new int[fieldLengths][fieldLengths];
+
 		for(int j = 0; j < fieldLengths; j++)
 			for(int i = 0; i < fieldLengths; i++)
 				confTable[j][i] = 0;
+
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
-		for(int i = 0; i < waterCount; i++){
+
+		for(int i = 0; i < numberOfWater; i++){
 			while(confTable[y][x] != 0){
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
@@ -68,12 +84,14 @@ public class IceField {
 					water.getNeighbour(w).addNeighbour(w.opposite(), water);
 			}
 			confTable[y][x] = 1;
+
 			int connected = 0;
 			if(y + 1 < fieldLengths - 1 && confTable[y + 1][x] != 1) connected = checkIslands(confTable, y + 1, x);
 			else if(x + 1 < fieldLengths - 1 && confTable[y][x + 1] != 1) connected = checkIslands(confTable, y, x + 1);
 			else if(y - 1 > 0 && confTable[y - 1][x] != 1) connected = checkIslands(confTable, y - 1, x);
 			else if(x - 1 > 0 && confTable[y][x - 1] != 1) connected = checkIslands(confTable, y, x - 1);
 			resetIslands(confTable);
+
 			if(connected != 0 && connected != fieldLengths*fieldLengths - i - 1){
 				confTable[y][x] = 0;
 				i--;
@@ -81,10 +99,10 @@ public class IceField {
 				y = random.nextInt(fieldLengths);
 			}
 
-			System.out.println(i + " " + connected);
 			connected = 0;
 		}
-		for(int i = 0; i < unstableCount; i++){
+
+		for(int i = 0; i < numberOfUnstable; i++){
 			while(confTable[y][x] != 0){
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
@@ -98,6 +116,7 @@ public class IceField {
 			}
 			confTable[y][x] = 2;
 		}
+
 		int max = 0;
 		int essentialID = 0;
 		for (PlayerActions pa : PlayerActions.values()) {
@@ -113,11 +132,14 @@ public class IceField {
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
-		for(int[] j : confTable) {
-			for (int i : j) System.out.print(i + " ");
-			System.out.println();
-		}
+
+		drawField(confTable);
 	}
+	private void putPlayersToCell(){
+
+	}
+
+	//Pálya építést segítő fv-ek
 	private void placeItem(PlayerActions pa, int y, int x, int essentialID){
 		Items item;
 		switch (pa){
@@ -147,21 +169,29 @@ public class IceField {
 			}
 		}
 	}
+	private void drawField(int[][] confTable){
+		for (int j = 0; j < fieldLengths; j++) {
+			for (int i = 0; i < fieldLengths; i++) {
+				System.out.print(confTable[j][i] + " ");
+			}
+			System.out.println(" ");
+		}
+	}
+
+	//Pálya működéséhez szolgáló fv-ek
 	private void snowStorm() {
 		Random r = new Random();
 		int x = r.nextInt(fieldLengths);
 		int y = r.nextInt(fieldLengths);
 		IceCell rootCell = field.get(y).get(x);
 		int radius = (int)(Math.ceil(((double)fieldLengths)/2));
-
-		int i = 0;
-		rootCell.snowing();
-		for(Way w : Way.values()){
-			snow(radius, w, rootCell.getNeighbour(w), i++ % 2 == 1);
-		}
+		snow(radius, Way.up, rootCell, false);
+		snow(radius, Way.right, rootCell, true);
+		snow(radius, Way.down, rootCell, false);
+		snow(radius, Way.left, rootCell, true);
 	}
 	private void snow(int seqNum, Way to, IceCell from, boolean subroot){
-		if(seqNum == 0 || from == null) return;
+		if(seqNum == 0) return;
 		from.snowing();
 		snow(--seqNum, to, from.getNeighbour(to), subroot);
 		if(subroot){
@@ -181,6 +211,7 @@ public class IceField {
 		}
 	}
 
+	//Inputra reagáló fv-ek
 	public void nextPlayer() {
 		currentPlayer++;
 		Random r = new Random();

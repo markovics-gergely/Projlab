@@ -1,21 +1,29 @@
 package logic;
 
-import java.util.HashMap;
+import logic.characters.Eskimo;
+import logic.characters.Explorer;
+import logic.characters.Character;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        /*HashMap<String, Integer> hm = new HashMap<>();
+        Scanner chScan = new Scanner(System.in);
+        System.out.println("Mennyien játszanak?");
+        int chNumber = chScan.nextInt();
 
-        hm.put("lol", 1);
-        hm.put("lol", 2);
-        hm.put("lol", 3);
-        hm.put("lol", 4);
+        ArrayList<Character> ch = new ArrayList<>();
+        for(int i = 0; i < chNumber; i++){
+            Scanner typeScan = new Scanner(System.in);
+            System.out.println(i + ". karakter típusa: (E vagy F)");
+            String type = typeScan.nextLine();
 
-        hm.remove("lol", 4);
-        hm.remove("lol", 1);
-        hm.remove("lol", 2);
-        System.out.println(hm.get("lol"));*/
-        IceField icef = new IceField(3);
+            if(type.equals("E")) ch.add(new Eskimo(null));
+            else ch.add(new Explorer(null));
+        }
+
+        IceField field = new IceField(ch);
     }
 }

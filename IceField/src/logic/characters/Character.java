@@ -19,8 +19,6 @@ public abstract class Character {
 	private IceCell ownCell;
 	private BackPack backpack;
 
-	public abstract void ability();
-
 	Character(int mb, IceCell ic){
 		maxBodyHeat = mb;
 		bodyHeat = mb;
@@ -67,4 +65,6 @@ public abstract class Character {
 	}
 	public int getBodyHeat() { return bodyHeat;}
 	public BackPack getBackPack(){ return backpack; }
+
+	public abstract void ability();
 }
