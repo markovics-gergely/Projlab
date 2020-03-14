@@ -31,7 +31,7 @@ public class IceField {
 		buildCells();
 	}
 
-	//Pálya építéséhez szolgáló fv-ek
+	//Pálya építést szolgáló fv-ek
 	private void buildCells(){
 		for(int y = 0; y < fieldLengths; y++)  {
 			List<IceCell> a = new ArrayList<>();
@@ -45,14 +45,12 @@ public class IceField {
 			for(int x = 0; x < fieldLengths; x++)
 				buildNeighbours(field.get(y).get(x), y, x);
 
-		int numberOfWater, numberOfUnstable;
 		switch(maxPlayer){
-			case 6 : numberOfWater = 20; numberOfUnstable = 30; break;
-			case 5 : numberOfWater = 18; numberOfUnstable = 27; break;
-			case 4 : numberOfWater = 8;  numberOfUnstable = 16; break;
-			default: numberOfWater = 7;  numberOfUnstable = 14; break;
+			case 6 : configureCells(20, 30); break;
+			case 5 : configureCells(18, 27); break;
+			case 4 : configureCells(8, 16); break;
+			default: configureCells(7, 14); break;
 		}
-		configureCells(numberOfWater, numberOfUnstable);
 	}
 	private void buildNeighbours(IceCell ic, int y, int x){
 		if(y != 0) ic.addNeighbour(Way.up, field.get(y - 1).get(x));
@@ -133,10 +131,10 @@ public class IceField {
 			}
 		}
 
+		putPlayersToCell(confTable);
 		drawField(confTable);
 	}
-	private void putPlayersToCell(){
-
+	private void putPlayersToCell(int[][] confTable){
 	}
 
 	//Pálya építést segítő fv-ek
