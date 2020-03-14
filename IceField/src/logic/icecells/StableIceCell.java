@@ -21,6 +21,7 @@ public class StableIceCell extends IceCell  {
 		}
 	}
 	public void setIgloo(boolean b) { hasIgloo = true;}
+	public boolean safeToStart(){ return true; }
 	
 	public void snowing() {
 		gainOneSnow();

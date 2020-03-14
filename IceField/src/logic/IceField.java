@@ -135,7 +135,16 @@ public class IceField {
 		drawField(confTable);
 	}
 	private void putPlayersToCell(){
+		Random random = new Random();
+		int x = random.nextInt(fieldLengths);
+		int y = random.nextInt(fieldLengths);
 
+		while(!field.get(y).get(x).safeToStart()){
+			x = random.nextInt(fieldLengths);
+			y = random.nextInt(fieldLengths);
+		}
+		for(int i = 0; i < maxPlayer; i++)
+			field.get(y).get(x).addCharacter(characters.get(i));
 	}
 
 	//Pálya építést segítő fv-ek

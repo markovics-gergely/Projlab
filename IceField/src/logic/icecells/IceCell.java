@@ -25,6 +25,7 @@ public abstract class IceCell {
 	}
 	public void setOwnField(IceField icef) {ownField = icef;}
 	public void setCapacityKnown() { capacityKnown = true;}
+	public boolean safeToStart(){ return false; }
 	public void loseSnow(boolean withShovel) {
 		snow = (withShovel) ? snow - 2 : snow - 1;
 		if(snow < 0) snow = 0;
