@@ -34,25 +34,23 @@ public class IceField {
 	//Pálya építéséhez szolgáló fv-ek
 	private void buildCells(){
 		for(int y = 0; y < fieldLengths; y++)  {
-			List<IceCell> a = new ArrayList<>();
+			List<IceCell> row = new ArrayList<>();
 			for(int x = 0; x < fieldLengths; x++) {
-				a.add(new StableIceCell(this, null));
+				row.add(new StableIceCell(this, null));
 			}
-			field.add(a);
+			field.add(row);
 		}
 
 		for(int y = 0; y < fieldLengths; y++)
 			for(int x = 0; x < fieldLengths; x++)
 				buildNeighbours(field.get(y).get(x), y, x);
 
-		int numberOfWater, numberOfUnstable;
 		switch(maxPlayer){
-			case 6 : numberOfWater = 20; numberOfUnstable = 30; break;
-			case 5 : numberOfWater = 18; numberOfUnstable = 27; break;
-			case 4 : numberOfWater = 8;  numberOfUnstable = 16; break;
-			default: numberOfWater = 7;  numberOfUnstable = 14; break;
+			case 6 : configureCells(20, 30); break;
+			case 5 : configureCells(18, 27); break;
+			case 4 : configureCells(8, 16); break;
+			default: configureCells(7, 14); break;
 		}
-		configureCells(numberOfWater, numberOfUnstable);
 	}
 	private void buildNeighbours(IceCell ic, int y, int x){
 		if(y != 0) ic.addNeighbour(Way.up, field.get(y - 1).get(x));
@@ -76,13 +74,6 @@ public class IceField {
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
 			}
-			WaterCell water = new WaterCell(this);
-			field.get(y).add(x, water);
-			buildNeighbours(water, y, x);
-			for(Way w : Way.values()){
-				if(water.getNeighbour(w) != null)
-					water.getNeighbour(w).addNeighbour(w.opposite(), water);
-			}
 			confTable[y][x] = 1;
 
 			int connected = 0;
@@ -98,7 +89,15 @@ public class IceField {
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
 			}
-
+			else{
+				WaterCell water = new WaterCell(this);
+				field.get(y).add(x, water);
+				buildNeighbours(water, y, x);
+				for(Way w : Way.values()){
+					if(water.getNeighbour(w) != null)
+						water.getNeighbour(w).addNeighbour(w.opposite(), water);
+				}
+			}
 			connected = 0;
 		}
 
@@ -199,8 +198,15 @@ public class IceField {
 			snow(--seqNum, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
 	}
-	public void addIceCell(IceCell ic) { }
-	public void removeIceCell(IceCell ic) { }
+	public void addIceCell(IceCell ic, IceCell removed) {
+		for(int j = 0; j < fieldLengths; j++)
+			if(field.get(j).contains(removed)){
+				int i = field.get(j).indexOf(removed);
+				field.get(j).remove(i);
+				field.get(j).add(i, ic);
+			}
+	}
+
 	private void gameLost() { gameLost = true; }
 	private void gameWon() { gameWon = true; }
 	private void actionHandler(){

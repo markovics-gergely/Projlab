@@ -38,9 +38,7 @@ public class UnstableIceCell extends IceCell  {
 			c.addOneTurnInWater();
 		}
 		wc.setBroken();
-
-		ownField.removeIceCell(this);
-		ownField.addIceCell(wc);
+		ownField.addIceCell(wc, this);
 	}
 
 }
