@@ -18,7 +18,4 @@ public class Main {
         System.out.println(hm.get("lol"));*/
         IceField icef = new IceField(3);
     }
-    private static void asd(int[] i){
-        i[0] = 7;
-    }
 }
