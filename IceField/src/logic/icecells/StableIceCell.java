@@ -10,7 +10,7 @@ public class StableIceCell extends IceCell  {
 	private Items item;
 
 	public StableIceCell(IceField icef, Items i){
-		super(maxSnow, icef);
+		super(icef.getMaxPlayer(), icef);
 		item = i;
 	}
 

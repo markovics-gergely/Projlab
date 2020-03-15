@@ -4,6 +4,8 @@ import logic.IceField;
 import logic.Way;
 import logic.characters.Character;
 
+import java.util.Random;
+
 public class UnstableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
 

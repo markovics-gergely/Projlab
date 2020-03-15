@@ -17,12 +17,16 @@ public abstract class IceCell {
 	protected ArrayList<Character> standingPlayers = new ArrayList<>();
 	protected IceField ownField;
 
+	public int getSnow(){ return snow; } //CSAK TESZT
+	public int getCapacity(){ return capacity; } //CSAK TESZT
+
 	public IceCell(int c, IceField icef){
 		Random r = new Random();
 		snow = r.nextInt(maxSnow + 1);
 		capacity = c;
 		ownField = icef;
 	}
+
 	public void setOwnField(IceField icef) {ownField = icef;}
 	public void setCapacityKnown() { capacityKnown = true;}
 	public void loseSnow(boolean withShovel) {

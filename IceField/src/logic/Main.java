@@ -30,7 +30,5 @@ public class Main {
         }
 
         IceField field = new IceField(ch);
-        field.movePlayer();
-        field.mineActualCell();
     }
 }

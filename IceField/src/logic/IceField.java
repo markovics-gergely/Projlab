@@ -23,10 +23,33 @@ public class IceField {
 	private ArrayList<Character> characters;
 	private WinChecker wc = new WinChecker();
 
+	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
+	private int[][] chTable; //CSAK TESZT, KISZEDNI A putPlayersToCell()-ből ÉS A KONSTRUKTORBÓL
+	private void drawField(){
+		for (int j = 0; j < fieldLengths; j++) {
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(cellTable[j][i] + " ");
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(chTable[j][i] + " ");
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getSnow() + " "); //CSAK TESZT, KISZEDNI a getSnow()-t az IceCellből.
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getCapacity() + " "); //CSAK TESZT, KISZEDNI a getCapacity()-t az IceCellből.
+			System.out.println();
+		}
+		System.out.println();
+	} //CSAK TESZT, ÉS KISZEDNI AZ INPUT FV EK VÉGÉRŐL
+
 	public IceField(ArrayList<Character> c){
 		maxPlayer = c.size();
 		fieldLengths = maxPlayer + 4;
 		characters = c;
+
+		cellTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
+		chTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
 
 		buildCells();
 	}
@@ -59,18 +82,14 @@ public class IceField {
 		if(x != fieldLengths - 1) ic.addNeighbour(Way.right, field.get(y).get(x + 1));
 	}
 	private void configureCells(int numberOfWater, int numberOfUnstable) {
-		int[][] confTable = new int[fieldLengths][fieldLengths];
-
-		for(int j = 0; j < fieldLengths; j++)
-			for(int i = 0; i < fieldLengths; i++)
-				confTable[j][i] = 0;
+		//int[][] cellTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
 
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
 
 		for(int i = 0; i < numberOfWater; i++){
-			while(confTable[y][x] != 0){
+			while(cellTable[y][x] != 0){
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
 			}
@@ -81,17 +100,17 @@ public class IceField {
 				if(water.getNeighbour(w) != null)
 					water.getNeighbour(w).addNeighbour(w.opposite(), water);
 			}
-			confTable[y][x] = 1;
+			cellTable[y][x] = 1;
 
 			int connected = 0;
-			if(y + 1 < fieldLengths - 1 && confTable[y + 1][x] != 1) connected = checkIslands(confTable, y + 1, x);
-			else if(x + 1 < fieldLengths - 1 && confTable[y][x + 1] != 1) connected = checkIslands(confTable, y, x + 1);
-			else if(y - 1 > 0 && confTable[y - 1][x] != 1) connected = checkIslands(confTable, y - 1, x);
-			else if(x - 1 > 0 && confTable[y][x - 1] != 1) connected = checkIslands(confTable, y, x - 1);
-			resetIslands(confTable);
+			if(y + 1 < fieldLengths - 1 && cellTable[y + 1][x] != 1) connected = checkIslands(cellTable, y + 1, x);
+			else if(x + 1 < fieldLengths - 1 && cellTable[y][x + 1] != 1) connected = checkIslands(cellTable, y, x + 1);
+			else if(y - 1 > 0 && cellTable[y - 1][x] != 1) connected = checkIslands(cellTable, y - 1, x);
+			else if(x - 1 > 0 && cellTable[y][x - 1] != 1) connected = checkIslands(cellTable, y, x - 1);
+			resetIslands(cellTable);
 
 			if(connected != 0 && connected != fieldLengths*fieldLengths - i - 1){
-				confTable[y][x] = 0;
+				cellTable[y][x] = 0;
 				i--;
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
@@ -101,7 +120,7 @@ public class IceField {
 		}
 
 		for(int i = 0; i < numberOfUnstable; i++){
-			while(confTable[y][x] != 0){
+			while(cellTable[y][x] != 0){
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
 			}
@@ -112,7 +131,7 @@ public class IceField {
 				if(unstable.getNeighbour(w) != null)
 					unstable.getNeighbour(w).addNeighbour(w.opposite(), unstable);
 			}
-			confTable[y][x] = 2;
+			cellTable[y][x] = 2;
 		}
 
 		int max = 0;
@@ -121,17 +140,18 @@ public class IceField {
 			max = (pa == PlayerActions.eating) ? 2 * maxPlayer : maxPlayer - 1;
 			if (pa == PlayerActions.assemblingEssentials) max = 3;
 			for (int i = 1; i < max; i++) {
-				while (confTable[y][x] != 0) {
+				while (cellTable[y][x] != 0) {
 					x = random.nextInt(fieldLengths);
 					y = random.nextInt(fieldLengths);
 				}
-				confTable[y][x] = 3;
+				cellTable[y][x] = 3;
 				placeItem(pa, y, x, essentialID);
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
 		putPlayersToCell();
-		drawField(confTable);
+
+		drawField();
 	}
 	private void putPlayersToCell() {
 		Random random = new Random();
@@ -145,6 +165,7 @@ public class IceField {
 		for(int i = 0; i < maxPlayer; i++) {
 			field.get(y).get(x).addCharacter(characters.get(i));
 			characters.get(i).setOwnCell(field.get(y).get(x));
+			chTable[y][x] += 1; //CSAK TESZT
 		}
 	}
 
@@ -176,14 +197,6 @@ public class IceField {
 			for (int i = 0; i < fieldLengths; i++){
 				if(confTable[j][i] >= 10) confTable[j][i] -= 10;
 			}
-		}
-	}
-	private void drawField(int[][] confTable){
-		for (int j = 0; j < fieldLengths; j++) {
-			for (int i = 0; i < fieldLengths; i++) {
-				System.out.print(confTable[j][i] + " ");
-			}
-			System.out.println(" ");
 		}
 	}
 
@@ -219,6 +232,7 @@ public class IceField {
 			nextPlayer();
 		}
 	}
+	public static int getMaxPlayer(){ return maxPlayer; }
 
 	//Inputra reagáló fv-ek
 	public void nextPlayer() {
@@ -235,21 +249,31 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
+
+		drawField();
 	}
 	public void setPlayerWay(Way w) {
 		characters.get(currentPlayer).setFacingWay(w);
+
+		drawField();
 	}
 	public void usePlayerItem(PlayerActions pa) {
 		characters.get(currentPlayer).useItem(pa);
 		actionHandler();
+
+		drawField();
 	}
 	public void useAbility() {
 		characters.get(currentPlayer).ability();
 		actionHandler();
+
+		drawField();
 	}
 	public void movePlayer() {
 		characters.get(currentPlayer).move();
 		actionHandler();
+
+		drawField();
 	}
 	public void useEssentialItems() {
 		IceCell ic = characters.get(0).getOwnCell();
@@ -262,14 +286,17 @@ public class IceField {
 			ch.useEssentials();
 		}
 
-		if(wc.isAssembled())
-			gameWon();
-		else
-			wc.resetAssembledItems();
+		if(wc.isAssembled()) gameWon();
+		else wc.resetAssembledItems();
+
 		actionHandler();
+
+		drawField();
 	}
 	public void mineActualCell() {
 		characters.get(currentPlayer).mine();
 		actionHandler();
+
+		drawField();
 	}
 }

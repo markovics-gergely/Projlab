@@ -5,6 +5,8 @@ import logic.Way;
 import logic.characters.Character;
 import logic.characters.Eskimo;
 
+import java.util.Random;
+
 public class WaterCell extends IceCell {
 	private boolean broken = false;
 
