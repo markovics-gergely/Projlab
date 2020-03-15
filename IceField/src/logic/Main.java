@@ -3,6 +3,7 @@ package logic;
 import logic.characters.Eskimo;
 import logic.characters.Explorer;
 import logic.characters.Character;
+import logic.items.PlayerActions;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -30,5 +31,11 @@ public class Main {
         }
 
         IceField field = new IceField(ch);
+        //Player 1
+        field.movePlayer();
+        field.nextPlayer();
+        //Player 2
+        field.setPlayerWay(Way.left);
+        field.movePlayer();
     }
 }

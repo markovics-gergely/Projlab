@@ -24,14 +24,13 @@ public class IceField {
 	private WinChecker wc = new WinChecker();
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
-	private int[][] chTable; //CSAK TESZT, KISZEDNI A putPlayersToCell()-ből ÉS A KONSTRUKTORBÓL
 	private void drawField(){
 		for (int j = 0; j < fieldLengths; j++) {
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(cellTable[j][i] + " ");
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
-				System.out.print(chTable[j][i] + " ");
+				System.out.print(field.get(j).get(i).getPlayers() + " "); //CSAK TESZT, KISZEDNI a getPlayers()-t az IceCellből.
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(field.get(j).get(i).getSnow() + " "); //CSAK TESZT, KISZEDNI a getSnow()-t az IceCellből.
@@ -49,7 +48,6 @@ public class IceField {
 		characters = c;
 
 		cellTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
-		chTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
 
 		buildCells();
 	}
@@ -165,7 +163,6 @@ public class IceField {
 		for(int i = 0; i < maxPlayer; i++) {
 			field.get(y).get(x).addCharacter(characters.get(i));
 			characters.get(i).setOwnCell(field.get(y).get(x));
-			chTable[y][x] += 1; //CSAK TESZT
 		}
 	}
 
@@ -221,8 +218,14 @@ public class IceField {
 			snow(--seqNum, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
 	}
-	public void addIceCell(IceCell ic) { }
-	public void removeIceCell(IceCell ic) { }
+	public void addIceCell(IceCell ic, IceCell removed) {
+		for(int j = 0; j < fieldLengths; j++)
+			if(field.get(j).contains(removed)){
+				int i = field.get(j).indexOf(removed);
+				field.get(j).remove(i);
+				field.get(j).add(i, ic);
+			}
+	}
 	private void gameLost() { gameLost = true; }
 	private void gameWon() { gameWon = true; }
 	private void actionHandler(){
@@ -249,31 +252,27 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
-
-		drawField();
 	}
 	public void setPlayerWay(Way w) {
 		characters.get(currentPlayer).setFacingWay(w);
-
-		drawField();
 	}
 	public void usePlayerItem(PlayerActions pa) {
 		characters.get(currentPlayer).useItem(pa);
 		actionHandler();
 
-		drawField();
+		drawField(); //CSAK TESZT
 	}
 	public void useAbility() {
 		characters.get(currentPlayer).ability();
 		actionHandler();
 
-		drawField();
+		drawField(); //CSAK TESZT
 	}
 	public void movePlayer() {
 		characters.get(currentPlayer).move();
 		actionHandler();
 
-		drawField();
+		drawField(); //CSAK TESZT
 	}
 	public void useEssentialItems() {
 		IceCell ic = characters.get(0).getOwnCell();
@@ -291,12 +290,12 @@ public class IceField {
 
 		actionHandler();
 
-		drawField();
+		drawField(); //CSAK TESZT
 	}
 	public void mineActualCell() {
 		characters.get(currentPlayer).mine();
 		actionHandler();
 
-		drawField();
+		drawField(); //CSAK TESZT
 	}
 }

@@ -15,7 +15,7 @@ public abstract class Character {
 	private int bodyHeat;
 	private int turnsInWater = 0;
 	private boolean wearingDivingSuit = false;
-	private Way facingWay = up;
+	private Way facingWay;
 	private IceCell ownCell;
 	private BackPack backpack;
 
@@ -24,6 +24,7 @@ public abstract class Character {
 		bodyHeat = mb;
 		ownCell = ic;
 		backpack = new BackPack();
+		facingWay = up;
 	}
 
 	public void move() {

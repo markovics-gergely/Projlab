@@ -19,6 +19,7 @@ public abstract class IceCell {
 
 	public int getSnow(){ return snow; } //CSAK TESZT
 	public int getCapacity(){ return capacity; } //CSAK TESZT
+	public int getPlayers(){ return standingPlayers.size(); } //CSAK TESZT
 
 	public IceCell(int c, IceField icef){
 		Random r = new Random();
@@ -27,7 +28,6 @@ public abstract class IceCell {
 		ownField = icef;
 	}
 
-	public void setOwnField(IceField icef) {ownField = icef;}
 	public void setCapacityKnown() { capacityKnown = true;}
 	public void loseSnow(boolean withShovel) {
 		snow = (withShovel) ? snow - 2 : snow - 1;
