@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-
+//Tesztelek
     public static void main(String[] args) {
         boolean repeat = true;
         int chNumber = 0;
