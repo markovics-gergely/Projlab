@@ -3,9 +3,11 @@ package logic;
 import logic.characters.Eskimo;
 import logic.characters.Explorer;
 import logic.characters.Character;
+import logic.icecells.IceCell;
 import logic.items.PlayerActions;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {

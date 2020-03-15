@@ -204,16 +204,18 @@ public class IceField {
 		int y = r.nextInt(fieldLengths);
 		IceCell rootCell = field.get(y).get(x);
 		int radius = (int)(Math.ceil(((double)fieldLengths)/2));
-		snow(radius, Way.up, rootCell, false);
-		snow(radius, Way.right, rootCell, true);
-		snow(radius, Way.down, rootCell, false);
-		snow(radius, Way.left, rootCell, true);
+
+		rootCell.snowing();
+		int i = 0;
+		for(Way w : Way.values()){
+			snow(radius, w, rootCell.getNeighbour(w), i++ % 2 == 1);
+		}
 	}
-	private void snow(int seqNum, Way to, IceCell from, boolean subroot){
-		if(seqNum == 0) return;
+	private void snow(int seqNum, Way to, IceCell from, boolean subRoot){
+		if(seqNum == 0 || from == null) return;
 		from.snowing();
-		snow(--seqNum, to, from.getNeighbour(to), subroot);
-		if(subroot){
+		snow(--seqNum, to, from.getNeighbour(to), subRoot);
+		if(subRoot){
 			snow(--seqNum, to.rotate(true), from.getNeighbour(to.rotate(true)), false);
 			snow(--seqNum, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
