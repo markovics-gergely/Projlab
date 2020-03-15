@@ -10,9 +10,14 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Scanner chScan = new Scanner(System.in);
-        System.out.println("Mennyien játszanak?");
-        int chNumber = chScan.nextInt();
+        boolean repeat = true;
+        int chNumber = 0;
+        while(repeat) {
+            Scanner chScan = new Scanner(System.in);
+            System.out.println("Mennyien játszanak?");
+            chNumber = chScan.nextInt();
+            repeat = chNumber < 3 || chNumber > 6;
+        }
 
         ArrayList<Character> ch = new ArrayList<>();
         for(int i = 0; i < chNumber; i++){
@@ -25,5 +30,7 @@ public class Main {
         }
 
         IceField field = new IceField(ch);
+        field.movePlayer();
+        field.mineActualCell();
     }
 }

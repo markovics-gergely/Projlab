@@ -14,7 +14,7 @@ public abstract class IceCell {
 	protected int snow;
 	protected static int maxSnow = 5;
 	private HashMap<Way, IceCell> neighbours = new HashMap<>();
-	protected ArrayList<Character> standingPlayers;
+	protected ArrayList<Character> standingPlayers = new ArrayList<>();
 	protected IceField ownField;
 
 	public IceCell(int c, IceField icef){
@@ -25,7 +25,6 @@ public abstract class IceCell {
 	}
 	public void setOwnField(IceField icef) {ownField = icef;}
 	public void setCapacityKnown() { capacityKnown = true;}
-	public boolean safeToStart(){ return false; }
 	public void loseSnow(boolean withShovel) {
 		snow = (withShovel) ? snow - 2 : snow - 1;
 		if(snow < 0) snow = 0;
@@ -44,6 +43,7 @@ public abstract class IceCell {
 	public void removeCharacter(Character ch) { standingPlayers.remove(ch); }
 	public void addCharacter(Character ch) { standingPlayers.add(ch); }
 
+	public boolean safeToStart(){ return false; }
 	public void movePlayerOut(Way from) {}
 	public void mine(Character actual) {}
 	public void setIgloo(boolean b) {}

@@ -31,14 +31,14 @@ public class IceField {
 		buildCells();
 	}
 
-	//Pálya építéséhez szolgáló fv-ek
+	//Pálya építést szolgáló fv-ek
 	private void buildCells(){
 		for(int y = 0; y < fieldLengths; y++)  {
-			List<IceCell> row = new ArrayList<>();
+			List<IceCell> a = new ArrayList<>();
 			for(int x = 0; x < fieldLengths; x++) {
-				row.add(new StableIceCell(this, null));
+				a.add(new StableIceCell(this, null));
 			}
-			field.add(row);
+			field.add(a);
 		}
 
 		for(int y = 0; y < fieldLengths; y++)
@@ -74,6 +74,13 @@ public class IceField {
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
 			}
+			WaterCell water = new WaterCell(this);
+			field.get(y).add(x, water);
+			buildNeighbours(water, y, x);
+			for(Way w : Way.values()){
+				if(water.getNeighbour(w) != null)
+					water.getNeighbour(w).addNeighbour(w.opposite(), water);
+			}
 			confTable[y][x] = 1;
 
 			int connected = 0;
@@ -89,15 +96,7 @@ public class IceField {
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
 			}
-			else{
-				WaterCell water = new WaterCell(this);
-				field.get(y).add(x, water);
-				buildNeighbours(water, y, x);
-				for(Way w : Way.values()){
-					if(water.getNeighbour(w) != null)
-						water.getNeighbour(w).addNeighbour(w.opposite(), water);
-				}
-			}
+
 			connected = 0;
 		}
 
@@ -131,10 +130,10 @@ public class IceField {
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
-
+		putPlayersToCell();
 		drawField(confTable);
 	}
-	private void putPlayersToCell(){
+	private void putPlayersToCell() {
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
@@ -143,8 +142,10 @@ public class IceField {
 			x = random.nextInt(fieldLengths);
 			y = random.nextInt(fieldLengths);
 		}
-		for(int i = 0; i < maxPlayer; i++)
+		for(int i = 0; i < maxPlayer; i++) {
 			field.get(y).get(x).addCharacter(characters.get(i));
+			characters.get(i).setOwnCell(field.get(y).get(x));
+		}
 	}
 
 	//Pálya építést segítő fv-ek
@@ -207,15 +208,8 @@ public class IceField {
 			snow(--seqNum, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
 	}
-	public void addIceCell(IceCell ic, IceCell removed) {
-		for(int j = 0; j < fieldLengths; j++)
-			if(field.get(j).contains(removed)){
-				int i = field.get(j).indexOf(removed);
-				field.get(j).remove(i);
-				field.get(j).add(i, ic);
-			}
-	}
-
+	public void addIceCell(IceCell ic) { }
+	public void removeIceCell(IceCell ic) { }
 	private void gameLost() { gameLost = true; }
 	private void gameWon() { gameWon = true; }
 	private void actionHandler(){

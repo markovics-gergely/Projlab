@@ -44,5 +44,4 @@ public class WaterCell extends IceCell {
 		ch.setOwnCell(this);
 		setBroken();
 	}
-
 }
