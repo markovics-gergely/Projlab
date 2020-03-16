@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
     //Ki lehet lépni a vízből
-    //Nem jó a move
+    //Nem jó a move - nem a move feladata azt tudni, a víz alatti köre alapból skippelődik (kötél használja is a move-ot, 100%-ban szüksége van rá)
     public static void main(String[] args) {
         ArrayList<Character> ch = new ArrayList<>();
         ch.add(new Explorer(null));

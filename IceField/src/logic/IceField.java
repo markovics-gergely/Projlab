@@ -65,11 +65,11 @@ public class IceField {
 	//Pálya építést szolgáló fv-ek
 	private void buildCells(){
 		for(int y = 0; y < fieldLengths; y++)  {
-			List<IceCell> a = new ArrayList<>();
+			List<IceCell> row = new ArrayList<>(fieldLengths);
 			for(int x = 0; x < fieldLengths; x++) {
-				a.add(new StableIceCell(this, null));
+				row.add(new StableIceCell(this, null));
 			}
-			field.add(a);
+			field.add(row);
 		}
 
 		for(int y = 0; y < fieldLengths; y++)
@@ -97,16 +97,9 @@ public class IceField {
 		int y = random.nextInt(fieldLengths);
 
 		for(int i = 0; i < numberOfWater; i++){
-			while(cellTable[y][x] != 0){
+			while(cellTable[y][x] != 0) {
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
-			}
-			WaterCell water = new WaterCell(this);
-			field.get(y).set(x, water);
-			buildNeighbours(water, y, x);
-			for(Way w : Way.values()){
-				if(water.getNeighbour(w) != null)
-					water.getNeighbour(w).addNeighbour(w.opposite(), water);
 			}
 			cellTable[y][x] = 1;
 
@@ -122,6 +115,15 @@ public class IceField {
 				i--;
 				x = random.nextInt(fieldLengths);
 				y = random.nextInt(fieldLengths);
+			}
+			else{
+				WaterCell water = new WaterCell(this);
+				field.get(y).set(x, water);
+				buildNeighbours(water, y, x);
+				for(Way w : Way.values()){
+					if(water.getNeighbour(w) != null)
+						water.getNeighbour(w).addNeighbour(w.opposite(), water);
+				}
 			}
 
 			connected = 0;
@@ -153,7 +155,7 @@ public class IceField {
 					y = random.nextInt(fieldLengths);
 				}
 				cellTable[y][x] = 3;
-				field.get(y).set(x, placeItem(pa, y, x, essentialID));
+				placeItem(pa, y, x, essentialID);
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
@@ -175,7 +177,7 @@ public class IceField {
 			characters.get(i).setOwnCell(field.get(y).get(x));
 		}
 	}
-	private StableIceCell placeItem(PlayerActions pa, int y, int x, int essentialID){
+	private void placeItem(PlayerActions pa, int y, int x, int essentialID){
 		Items item;
 		switch (pa){
 			case eating: item = new Food(); break;
@@ -190,7 +192,7 @@ public class IceField {
 			if(newCell.getNeighbour(w) != null)
 				newCell.getNeighbour(w).addNeighbour(w.opposite(), newCell);
 		}
-		return newCell;
+		field.get(y).set(x, newCell);
 	}
 	private int checkIslands(int[][] confTable, int y, int x){
 		if(y < 0 || y > fieldLengths - 1 || x < 0 || x > fieldLengths - 1) return 0;
@@ -250,10 +252,13 @@ public class IceField {
 
 	//Inputra reagáló fv-ek
 	public void nextPlayer() {
-		currentPlayer++;
+		while(characters.get(currentPlayer).getTurnsInWater() != 0)
+			currentPlayer++;
+
 		Random r = new Random();
-		int i = r.nextInt(3);
-		if(currentPlayer == maxPlayer){
+		int i = r.nextInt(4);
+
+		if(currentPlayer >= maxPlayer){
 			currentPlayer = 0;
 			if(i == 0) snowStorm();
 		}
