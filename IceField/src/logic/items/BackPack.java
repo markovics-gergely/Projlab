@@ -7,20 +7,26 @@ public class BackPack {
 	private HashMap<PlayerActions, ArrayList<Items>> obtainedItems = new HashMap<>();
 
 	public Items hasItem(PlayerActions pa) {
-		return obtainedItems.get(pa).get(0);
+		return obtainedItems.containsKey(pa) ? obtainedItems.get(pa).get(0) : null;
 	}
 	public boolean addItem(Items it, PlayerActions pa) {
-		if(obtainedItems.get(pa) != null){
+		if(obtainedItems.containsKey(pa) && pa != PlayerActions.eating && pa != PlayerActions.assemblingEssentials){
 			return false;
 		}
+		ArrayList<Items> array = new ArrayList<>();
+		array.addAll(obtainedItems.get(pa));
+		array.add(it);
+		obtainedItems.put(pa, array);
 		return true;
 	}
 	public Food useFood() {
 		Food f = null;
 
-		if(obtainedItems.get(PlayerActions.eating) != null)
-			f = (Food)obtainedItems.get(PlayerActions.eating).get(obtainedItems.get(PlayerActions.eating).size()-1);
-		obtainedItems.get(PlayerActions.eating).remove(obtainedItems.get(PlayerActions.eating).size()-1);
+		if(obtainedItems.containsKey(PlayerActions.eating)){
+			int lastIndex = obtainedItems.get(PlayerActions.eating).size()-1;
+			f = (Food)obtainedItems.get(PlayerActions.eating).get(lastIndex);
+			obtainedItems.get(PlayerActions.eating).remove(lastIndex);
+		}
 
 		return f;
 	}

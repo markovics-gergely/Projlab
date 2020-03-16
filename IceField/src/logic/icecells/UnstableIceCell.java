@@ -24,14 +24,17 @@ public class UnstableIceCell extends IceCell  {
 	}
 	public void accept(Character ch) {
 		addCharacter(ch);
+		ch.setOwnCell(this);
 		if(standingPlayers.size() <= capacity)
 			return;
 
 		WaterCell wc = new WaterCell(ownField);
 		for (Way w : Way.values()) {
 			IceCell ic = getNeighbour(w);
-			wc.addNeighbour(w, ic);
-			ic.addNeighbour(w.opposite(), wc);
+			if(ic != null){
+				wc.addNeighbour(w, ic);
+				ic.addNeighbour(w.opposite(), wc);
+			}
 		}
 		for(Character c : standingPlayers){
 			wc.addCharacter(c);

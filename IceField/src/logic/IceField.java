@@ -219,16 +219,18 @@ public class IceField {
 		rootCell.snowing();
 		int i = 0;
 		for(Way w : Way.values()){
-			snow(radius, w, rootCell.getNeighbour(w), i++ % 2 == 1);
+			snow(radius - 1, w, rootCell.getNeighbour(w), i % 2 == 1);
+			i++;
 		}
 	}
 	private void snow(int seqNum, Way to, IceCell from, boolean subRoot){
 		if(seqNum == 0 || from == null) return;
 		from.snowing();
-		snow(--seqNum, to, from.getNeighbour(to), subRoot);
+
+		snow(seqNum - 1, to, from.getNeighbour(to), subRoot);
 		if(subRoot){
-			snow(--seqNum, to.rotate(true), from.getNeighbour(to.rotate(true)), false);
-			snow(--seqNum, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
+			snow(seqNum - 1, to.rotate(true), from.getNeighbour(to.rotate(true)), false);
+			snow(seqNum - 1, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
 	}
 	public void addIceCell(IceCell ic, IceCell removed) {
@@ -243,7 +245,7 @@ public class IceField {
 	private void gameWon() { gameWon = true; }
 	private void actionHandler(){
 		actionsLeft--;
-		if(actionsLeft == 0){
+		if(actionsLeft == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
 			actionsLeft = maxActions;
 			nextPlayer();
 		}
@@ -252,15 +254,17 @@ public class IceField {
 
 	//Inputra reagáló fv-ek
 	public void nextPlayer() {
-		while(characters.get(currentPlayer).getTurnsInWater() != 0)
-			currentPlayer++;
-
 		Random r = new Random();
-		int i = r.nextInt(4);
 
-		if(currentPlayer >= maxPlayer){
-			currentPlayer = 0;
-			if(i == 0) snowStorm();
+		while(characters.get(currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : currentPlayer + 1).getTurnsInWater() != 0) {
+			if (currentPlayer == 0) {
+				int i = r.nextInt(4);
+				if (i == 0) snowStorm();
+			}
+		}
+		if (currentPlayer == 0) {
+			int i = r.nextInt(4);
+			if (i == 0) snowStorm();
 		}
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)
@@ -268,6 +272,8 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
+
+
 	}
 	public void setPlayerWay(Way w) {
 		characters.get(currentPlayer).setFacingWay(w);

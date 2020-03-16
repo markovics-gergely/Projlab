@@ -31,7 +31,7 @@ public class Main {
             case "dig": field.usePlayerItem(PlayerActions.shovelling); break;
             case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break;
             case "save" : field.usePlayerItem(PlayerActions.savingWithRope); break;
-            case "assamble" : field.useEssentialItems(); break;
+            case "assemble" : field.useEssentialItems(); break;
             case "move": field.movePlayer(); break;
             case "ability" : field.useAbility(); break;
             case "mine": field.mineActualCell(); break;

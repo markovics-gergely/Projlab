@@ -59,6 +59,7 @@ public abstract class Character {
 	public void useItem(PlayerActions pa) {
 		Items i = backpack.hasItem(pa);
 		if(i != null) i.use(this);
+		else if(pa == PlayerActions.shovelling) dig(false);
 	}
 	public void useEssentials() {
 		Items ei = backpack.hasItem(PlayerActions.assemblingEssentials);
