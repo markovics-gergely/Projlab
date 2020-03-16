@@ -4,8 +4,6 @@ import logic.IceField;
 import logic.Way;
 import logic.characters.Character;
 
-import java.util.Random;
-
 public class UnstableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
 
@@ -13,6 +11,7 @@ public class UnstableIceCell extends IceCell  {
 		super(c, icef);
 	}
 
+	public boolean safeToStart(){ return false; }
 	public void setIgloo(boolean b) { hasIgloo = true; }
 	public void snowing() {
 		gainOneSnow();
@@ -41,6 +40,5 @@ public class UnstableIceCell extends IceCell  {
 		}
 		wc.setBroken();
 		ownField.addIceCell(wc, this);
-		ch.setOwnCell(wc);
 	}
 }

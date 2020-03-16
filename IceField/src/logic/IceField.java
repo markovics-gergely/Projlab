@@ -15,8 +15,8 @@ public class IceField {
 	private static int maxPlayer;
 	private static int fieldLengths;
 	private int currentPlayer = 0;
-	public int actionsLeft = 4;
-	public static int maxActions = 4;
+	private int actionsLeft = 4;
+	private static int maxActions = 4;
 	private boolean gameWon = false;
 	private boolean gameLost = false;
 	private List<List<IceCell>> field = new ArrayList<>();
@@ -25,6 +25,13 @@ public class IceField {
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
+		System.out.println(currentPlayer + 1 + ". játékos hátralévő munkája: " + actionsLeft + " és testhője: " + characters.get(currentPlayer).getBodyHeat());
+		System.out.print("Típus 0:St 1:Víz"); System.out.println();
+		System.out.print("2:Inst 3:Item    ");
+		System.out.print("Karakterek       ");
+		System.out.print("Hóréteg          ");
+		System.out.print("Kapacitás        ");
+		System.out.print("Kap. Known"); System.out.println();
 		for (int j = 0; j < fieldLengths; j++) {
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(cellTable[j][i] + " ");
@@ -37,6 +44,9 @@ public class IceField {
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(field.get(j).get(i).getCapacity() + " "); //CSAK TESZT, KISZEDNI a getCapacity()-t az IceCellből.
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getCapacityKnown() + " "); //CSAK TESZT, KISZEDNI a getCapacity()-t az IceCellből.
 			System.out.println();
 		}
 		System.out.println();
@@ -92,7 +102,7 @@ public class IceField {
 				y = random.nextInt(fieldLengths);
 			}
 			WaterCell water = new WaterCell(this);
-			field.get(y).add(x, water);
+			field.get(y).set(x, water);
 			buildNeighbours(water, y, x);
 			for(Way w : Way.values()){
 				if(water.getNeighbour(w) != null)
@@ -123,7 +133,7 @@ public class IceField {
 				y = random.nextInt(fieldLengths);
 			}
 			UnstableIceCell unstable = new UnstableIceCell(random.nextInt(maxPlayer - 2) + 2, this);
-			field.get(y).add(x, unstable);
+			field.get(y).set(x, unstable);
 			buildNeighbours(unstable, y, x);
 			for(Way w : Way.values()){
 				if(unstable.getNeighbour(w) != null)
@@ -143,14 +153,14 @@ public class IceField {
 					y = random.nextInt(fieldLengths);
 				}
 				cellTable[y][x] = 3;
-				placeItem(pa, y, x, essentialID);
+				field.get(y).set(x, placeItem(pa, y, x, essentialID));
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
 		putPlayersToCell();
 
-		drawField();
-	}
+		drawField(); //CSAK TESZT
+	} //VAN BENNE drawField();
 	private void putPlayersToCell() {
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
@@ -165,9 +175,7 @@ public class IceField {
 			characters.get(i).setOwnCell(field.get(y).get(x));
 		}
 	}
-
-	//Pálya építést segítő fv-ek
-	private void placeItem(PlayerActions pa, int y, int x, int essentialID){
+	private StableIceCell placeItem(PlayerActions pa, int y, int x, int essentialID){
 		Items item;
 		switch (pa){
 			case eating: item = new Food(); break;
@@ -182,6 +190,7 @@ public class IceField {
 			if(newCell.getNeighbour(w) != null)
 				newCell.getNeighbour(w).addNeighbour(w.opposite(), newCell);
 		}
+		return newCell;
 	}
 	private int checkIslands(int[][] confTable, int y, int x){
 		if(y < 0 || y > fieldLengths - 1 || x < 0 || x > fieldLengths - 1) return 0;

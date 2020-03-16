@@ -3,9 +3,6 @@ package logic.icecells;
 import logic.IceField;
 import logic.Way;
 import logic.characters.Character;
-import logic.characters.Eskimo;
-
-import java.util.Random;
 
 public class WaterCell extends IceCell {
 	private boolean broken = false;
@@ -39,6 +36,7 @@ public class WaterCell extends IceCell {
 		}
 	}
 
+	public boolean safeToStart(){ return false; }
 	public void snowing() { if(!broken) gainOneSnow(); }
 	public void accept(Character ch) {
 		addCharacter(ch);

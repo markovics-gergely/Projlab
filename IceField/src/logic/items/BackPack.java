@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BackPack {
-	private HashMap<PlayerActions, ArrayList<Items>> obtainedItems;
+	private HashMap<PlayerActions, ArrayList<Items>> obtainedItems = new HashMap<>();
 
 	public Items hasItem(PlayerActions pa) {
-		//Nem raktuk if contains be, mert ha nincs akkor null-t ad vissza
 		return obtainedItems.get(pa).get(0);
 	}
 	public boolean addItem(Items it, PlayerActions pa) {

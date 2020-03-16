@@ -1,7 +1,6 @@
 package logic.icecells;
 
 import logic.IceField;
-import logic.Way;
 import logic.characters.Character;
 import logic.items.Items;
 

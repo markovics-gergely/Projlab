@@ -3,41 +3,44 @@ package logic;
 import logic.characters.Eskimo;
 import logic.characters.Explorer;
 import logic.characters.Character;
-import logic.icecells.IceCell;
 import logic.items.PlayerActions;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-//csaó változtatok
+    //Ki lehet lépni a vízből
+    //Nem jó a move
     public static void main(String[] args) {
-        boolean repeat = true;
-        int chNumber = 0;
-        while(repeat) {
-            Scanner chScan = new Scanner(System.in);
-            System.out.println("Mennyien játszanak?");
-            chNumber = chScan.nextInt();
-            repeat = chNumber < 3 || chNumber > 6;
-        }
-
         ArrayList<Character> ch = new ArrayList<>();
-        for(int i = 0; i < chNumber; i++){
-            Scanner typeScan = new Scanner(System.in);
-            System.out.println(i + ". karakter típusa: (E vagy F)");
-            String type = typeScan.nextLine();
-
-            if(type.equals("E")) ch.add(new Eskimo(null));
-            else ch.add(new Explorer(null));
-        }
+        ch.add(new Explorer(null));
+        ch.add(new Eskimo(null));
+        ch.add(new Explorer(null));
 
         IceField field = new IceField(ch);
-        //Player 1
-        field.movePlayer();
-        field.nextPlayer();
-        //Player 2
-        field.setPlayerWay(Way.left);
-        field.movePlayer();
+        while(true){
+            Scanner actionScan = new Scanner(System.in);
+            String ac = actionScan.nextLine();
+            action(ac, field);
+        }
+    }
+
+    public static void action(String ac, IceField field){
+        switch(ac){
+            case "eat" : field.usePlayerItem(PlayerActions.eating); break;
+            case "dig": field.usePlayerItem(PlayerActions.shovelling); break;
+            case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break;
+            case "save" : field.usePlayerItem(PlayerActions.savingWithRope); break;
+            case "assamble" : field.useEssentialItems(); break;
+            case "move": field.movePlayer(); break;
+            case "ability" : field.useAbility(); break;
+            case "mine": field.mineActualCell(); break;
+            case "wup" : field.setPlayerWay(Way.up); break;
+            case "wdown" : field.setPlayerWay(Way.down); break;
+            case "wleft" : field.setPlayerWay(Way.left); break;
+            case "wright" : field.setPlayerWay(Way.right); break;
+            case "pass" : field.nextPlayer(); break;
+            default : System.out.println("Nincs ilyen opció!"); break;
+        }
     }
 }

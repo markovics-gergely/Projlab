@@ -10,7 +10,7 @@ import java.util.Random;
 
 public abstract class IceCell {
 	protected int capacity;
-	private boolean capacityKnown = false;
+	protected boolean capacityKnown = false;
 	protected int snow;
 	protected static int maxSnow = 5;
 	private HashMap<Way, IceCell> neighbours = new HashMap<>();
@@ -20,6 +20,7 @@ public abstract class IceCell {
 	public int getSnow(){ return snow; } //CSAK TESZT
 	public int getCapacity(){ return capacity; } //CSAK TESZT
 	public int getPlayers(){ return standingPlayers.size(); } //CSAK TESZT
+	public int getCapacityKnown(){ return capacityKnown ? 1 : 0; } //CSAK TESZT
 
 	public IceCell(int c, IceField icef){
 		Random r = new Random();
@@ -47,10 +48,10 @@ public abstract class IceCell {
 	public void removeCharacter(Character ch) { standingPlayers.remove(ch); }
 	public void addCharacter(Character ch) { standingPlayers.add(ch); }
 
-	public boolean safeToStart(){ return false; }
 	public void movePlayerOut(Way from) {}
 	public void mine(Character actual) {}
 	public void setIgloo(boolean b) {}
+	public abstract boolean safeToStart();
 	public abstract void accept(Character ch);
 	public abstract void snowing();
 }

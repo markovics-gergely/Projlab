@@ -64,7 +64,7 @@ public abstract class Character {
 		Items ei = backpack.hasItem(PlayerActions.assemblingEssentials);
 		if(ei != null) ei.use(this);
 	}
-	public int getBodyHeat() { return bodyHeat;}
+	public int getBodyHeat() { return bodyHeat; }
 	public BackPack getBackPack(){ return backpack; }
 
 	public abstract void ability();
