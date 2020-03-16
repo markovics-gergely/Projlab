@@ -275,28 +275,7 @@ public class IceField {
 
 
 	}
-	public void setPlayerWay(Way w) {
-		characters.get(currentPlayer).setFacingWay(w);
-	}
-	public void usePlayerItem(PlayerActions pa) {
-		characters.get(currentPlayer).useItem(pa);
-		actionHandler();
-
-		drawField(); //CSAK TESZT
-	}
-	public void useAbility() {
-		characters.get(currentPlayer).ability();
-		actionHandler();
-
-		drawField(); //CSAK TESZT
-	}
-	public void movePlayer() {
-		characters.get(currentPlayer).move();
-		actionHandler();
-
-		drawField(); //CSAK TESZT
-	}
-	public void useEssentialItems() {
+	private void useEssentialItems() {
 		IceCell ic = characters.get(0).getOwnCell();
 
 		for(Character ch : characters){
@@ -310,6 +289,30 @@ public class IceField {
 		if(wc.isAssembled()) gameWon();
 		else wc.resetAssembledItems();
 
+		actionHandler();
+
+		drawField(); //CSAK TESZT
+	}
+	public void setPlayerWay(Way w) {
+		characters.get(currentPlayer).setFacingWay(w);
+	}
+	public void usePlayerItem(PlayerActions pa) {
+		if(pa == PlayerActions.assemblingEssentials) useEssentialItems();
+		else {
+			characters.get(currentPlayer).useItem(pa);
+			actionHandler();
+		}
+		drawField(); //CSAK TESZT
+	}
+	public void useAbility() {
+		characters.get(currentPlayer).ability();
+		actionHandler();
+
+		drawField(); //CSAK TESZT
+	}
+	public void movePlayer(Way w) {
+		setPlayerWay(w);
+		characters.get(currentPlayer).move();
 		actionHandler();
 
 		drawField(); //CSAK TESZT
