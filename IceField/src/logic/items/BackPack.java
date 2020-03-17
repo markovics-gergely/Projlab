@@ -10,11 +10,12 @@ public class BackPack {
 		return obtainedItems.containsKey(pa) ? obtainedItems.get(pa).get(0) : null;
 	}
 	public boolean addItem(Items it, PlayerActions pa) {
-		if(obtainedItems.containsKey(pa) && pa != PlayerActions.eating && pa != PlayerActions.assemblingEssentials){
+		if(obtainedItems.containsKey(pa) && pa != PlayerActions.eating && pa != PlayerActions.assemblingEssentials)
 			return false;
-		}
+
 		ArrayList<Items> array = new ArrayList<>();
-		array.addAll(obtainedItems.get(pa));
+		if(obtainedItems.containsKey(pa))
+			array.addAll(obtainedItems.get(pa));
 		array.add(it);
 		obtainedItems.put(pa, array);
 		return true;
@@ -31,6 +32,7 @@ public class BackPack {
 		return f;
 	}
 	public int getEssentialItemNumber() {
-		return obtainedItems.get(PlayerActions.assemblingEssentials).size();
+		return obtainedItems.containsKey(PlayerActions.assemblingEssentials) ? obtainedItems.get(PlayerActions.assemblingEssentials).size() : 0;
 	}
+	public int getNumber(PlayerActions pa){ return obtainedItems.containsKey(pa) ? obtainedItems.get(pa).size() : 0; } //CSAK TESZT
 }

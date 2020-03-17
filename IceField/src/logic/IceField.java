@@ -17,15 +17,22 @@ public class IceField {
 	private int currentPlayer = 0;
 	private int actionsLeft = 4;
 	private static int maxActions = 4;
-	private boolean gameWon = false;
-	private boolean gameLost = false;
+	public boolean gameWon = false;
+	public boolean gameLost = false;
 	private List<List<IceCell>> field = new ArrayList<>();
 	private ArrayList<Character> characters;
 	private WinChecker wc = new WinChecker();
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
-		System.out.println("Kör eleje: " + currentPlayer + ". játékos hátralévő munkája: " + actionsLeft + " és testhője: " + characters.get(currentPlayer).getBodyHeat());
+		System.out.println(currentPlayer+1 + ". játékos hátralévő munkája: " + actionsLeft + " és testhője: " + characters.get(currentPlayer).getBodyHeat());
+		System.out.println(
+				"Ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.shovelling) +
+				"  Kötél:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.savingWithRope) +
+				"  Ruha:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.wearingSuit) +
+				"  Étel:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.eating) +
+				"  Plusz:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.assemblingEssentials)
+		); //TÖRÖLNI A BACKPACK CLASSBÓL.
 		System.out.print("Típus 0:St 1:Víz"); System.out.println();
 		System.out.print("2:Inst 3:Item    ");
 		System.out.print("Karakterek       ");
@@ -148,12 +155,12 @@ public class IceField {
 			cellTable[y][x] = 2;
 		}
 
-		int max = 0;
+		int itemNumber = 0;
 		int essentialID = 0;
 		for (PlayerActions pa : PlayerActions.values()) {
-			max = (pa == PlayerActions.eating) ? 2 * maxPlayer : maxPlayer - 1;
-			if (pa == PlayerActions.assemblingEssentials) max = 3;
-			for (int i = 1; i < max; i++) {
+			itemNumber = (pa == PlayerActions.eating) ? 2 * maxPlayer : maxPlayer - 1;
+			if (pa == PlayerActions.assemblingEssentials) itemNumber = 3;
+			for (int i = 0; i < itemNumber; i++) {
 				while (cellTable[y][x] != 0) {
 					x = random.nextInt(fieldLengths);
 					y = random.nextInt(fieldLengths);
@@ -277,7 +284,7 @@ public class IceField {
 				gameLost();
 		}
 
-
+		drawField();
 	}
 	private void useEssentialItems() {
 		IceCell ic = characters.get(0).getOwnCell();

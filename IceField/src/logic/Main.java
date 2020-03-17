@@ -20,9 +20,10 @@ public class Main {
             Scanner actionScan = new Scanner(System.in);
             String ac = actionScan.nextLine();
             action(ac, field);
+            if(field.gameWon){ System.out.println("Nyertetek!"); break; }
+            if(field.gameLost){ System.out.println("Vesztettetek!"); break; }
         }
     }
-
     public static void action(String ac, IceField field){
         switch(ac){
             case "eat" : field.usePlayerItem(PlayerActions.eating); break;

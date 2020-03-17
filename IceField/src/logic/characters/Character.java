@@ -57,7 +57,11 @@ public abstract class Character {
 	public void setFacingWay(Way w) { facingWay = w;}
 	public Way getFacingWay() { return facingWay;}
 	public void useItem(PlayerActions pa) {
-		Items i = backpack.hasItem(pa);
+		Items i;
+		if(pa == PlayerActions.eating)
+			i = backpack.useFood();
+		else
+			i = backpack.hasItem(pa);
 		if(i != null) i.use(this);
 		else if(pa == PlayerActions.shovelling) dig(false);
 	}
