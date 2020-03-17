@@ -267,16 +267,13 @@ public class IceField {
 	public void nextPlayer() {
 		Random r = new Random();
 
-		while(characters.get(currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : currentPlayer + 1).getTurnsInWater() != 0) {
-			if (currentPlayer == 0) {
-				int i = r.nextInt(4);
-				if (i == 0) snowStorm();
-			}
-		}
-		if (currentPlayer == 0) {
-			int i = r.nextInt(4);
-			if (i == 0) snowStorm();
-		}
+		do {
+			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
+		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
+
+		int i = r.nextInt(4);
+		if (i == 0) snowStorm();
+
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)
 				c.addOneTurnInWater();
