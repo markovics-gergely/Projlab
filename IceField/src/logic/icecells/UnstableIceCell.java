@@ -7,6 +7,8 @@ import logic.characters.Character;
 public class UnstableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
 
+	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
+
 	public UnstableIceCell(int c, IceField icef){
 		super(c, icef);
 	}

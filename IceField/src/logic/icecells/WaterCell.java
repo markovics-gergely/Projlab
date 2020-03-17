@@ -7,6 +7,8 @@ import logic.characters.Character;
 public class WaterCell extends IceCell {
 	private boolean broken = false;
 
+	public int getIgloo(){ return 0; }
+
 	public WaterCell(IceField icef){
 		super(0, icef);
 	}

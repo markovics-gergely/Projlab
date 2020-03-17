@@ -8,6 +8,8 @@ public class StableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
 	private Items item;
 
+	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
+
 	public StableIceCell(IceField icef, Items i){
 		super(icef.getMaxPlayer(), icef);
 		item = i;

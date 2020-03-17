@@ -21,6 +21,7 @@ public abstract class IceCell {
 	public int getCapacity(){ return capacity; } //CSAK TESZT
 	public int getPlayers(){ return standingPlayers.size(); } //CSAK TESZT
 	public int getCapacityKnown(){ return capacityKnown ? 1 : 0; } //CSAK TESZT
+	public abstract int getIgloo(); //CSAK TESZT
 
 	public IceCell(int c, IceField icef){
 		Random r = new Random();

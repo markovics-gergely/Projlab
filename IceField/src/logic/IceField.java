@@ -25,13 +25,14 @@ public class IceField {
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
-		System.out.println(currentPlayer + 1 + ". játékos hátralévő munkája: " + actionsLeft + " és testhője: " + characters.get(currentPlayer).getBodyHeat());
+		System.out.println("Kör eleje: " + currentPlayer + ". játékos hátralévő munkája: " + actionsLeft + " és testhője: " + characters.get(currentPlayer).getBodyHeat());
 		System.out.print("Típus 0:St 1:Víz"); System.out.println();
 		System.out.print("2:Inst 3:Item    ");
 		System.out.print("Karakterek       ");
 		System.out.print("Hóréteg          ");
 		System.out.print("Kapacitás        ");
-		System.out.print("Kap. Known"); System.out.println();
+		System.out.print("Kap. Known       ");
+		System.out.print("Iglu             "); System.out.println();
 		for (int j = 0; j < fieldLengths; j++) {
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(cellTable[j][i] + " ");
@@ -46,7 +47,10 @@ public class IceField {
 				System.out.print(field.get(j).get(i).getCapacity() + " "); //CSAK TESZT, KISZEDNI a getCapacity()-t az IceCellből.
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
-				System.out.print(field.get(j).get(i).getCapacityKnown() + " "); //CSAK TESZT, KISZEDNI a getCapacity()-t az IceCellből.
+				System.out.print(field.get(j).get(i).getCapacityKnown() + " "); //CSAK TESZT, KISZEDNI a getCapacityKnown()-t az IceCellből.
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getIgloo() + " "); //CSAK TESZT, KISZEDNI a getIgloo()-t az IceCellből és leszármazottaiból.
 			System.out.println();
 		}
 		System.out.println();
