@@ -7,7 +7,8 @@ public class EssentialItem implements Items {
 	private int ID;
 	private WinChecker wc;
 
-	public EssentialItem(int id){
+	public EssentialItem(int id, WinChecker winch){
+		wc = winch;
 		ID = id;
 	}
 

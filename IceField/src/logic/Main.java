@@ -4,7 +4,6 @@ import logic.characters.Eskimo;
 import logic.characters.Explorer;
 import logic.characters.Character;
 import logic.items.PlayerActions;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,8 +11,8 @@ public class Main {
     public static void main(String[] args) {
         ArrayList<Character> ch = new ArrayList<>();
         ch.add(new Explorer(null));
-        ch.add(new Eskimo(null));
         ch.add(new Explorer(null));
+        ch.add(new Eskimo(null));
 
         IceField field = new IceField(ch);
         while(true){
@@ -37,10 +36,10 @@ public class Main {
             case "setdown" : field.setPlayerWay(Way.down); break;
             case "setleft" : field.setPlayerWay(Way.left); break;
             case "setright" : field.setPlayerWay(Way.right); break;
-            case "moveup" : field.movePlayer(Way.up); break;
-            case "movedown" : field.movePlayer(Way.down); break;
-            case "moveleft" : field.movePlayer(Way.left); break;
-            case "moveright" : field.movePlayer(Way.right); break;
+            case "u" : field.movePlayer(Way.up); break;
+            case "d" : field.movePlayer(Way.down); break;
+            case "l" : field.movePlayer(Way.left); break;
+            case "r" : field.movePlayer(Way.right); break;
             case "pass" : field.nextPlayer(); break;
             default : System.out.println("Nincs ilyen opció!"); break;
         }

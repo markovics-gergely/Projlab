@@ -17,6 +17,7 @@ public class WaterCell extends IceCell {
 	public void movePlayerOut(Way from) {
 		if(standingPlayers.size() != 0){
 			Character c = null;
+
 			int i = 0;
 			for(Character ch : standingPlayers){
 				if(ch.getTurnsInWater() > i && ch.getDivingSuit()) {
@@ -32,9 +33,11 @@ public class WaterCell extends IceCell {
 					}
 				}
 			}
-			c.setFacingWay(from.opposite());
-			c.move();
-			c.resetTurnsInWater();
+			if(c != null) {
+				c.setFacingWay(from);
+				c.move();
+				c.resetTurnsInWater();
+			}
 		}
 	}
 

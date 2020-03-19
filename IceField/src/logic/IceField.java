@@ -15,7 +15,7 @@ public class IceField {
 	private static int maxPlayer;
 	private static int fieldLengths;
 	private int currentPlayer = 0;
-	private int actionsLeft = 4;
+	private int actionsLeft;
 	private static int maxActions = 4;
 	public boolean gameWon = false;
 	public boolean gameLost = false;
@@ -65,6 +65,7 @@ public class IceField {
 
 	public IceField(ArrayList<Character> c){
 		maxPlayer = c.size();
+		actionsLeft = maxActions;
 		fieldLengths = maxPlayer + 4;
 		characters = c;
 
@@ -195,7 +196,7 @@ public class IceField {
 			case shovelling: item = new Shovel(); break;
 			case wearingSuit: item = new Divingsuit(); break;
 			case savingWithRope: item = new Rope(); break;
-			default: item = new EssentialItem(essentialID); break;
+			default: item = new EssentialItem(essentialID, wc); break;
 		}
 		StableIceCell newCell = new StableIceCell(this, item);
 		buildNeighbours(newCell, y, x);
@@ -219,7 +220,7 @@ public class IceField {
 		}
 	}
 
-	//Pálya működéséhez szolgáló fv-ek
+	//Pálya működését szolgáló fv-ek
 	private void snowStorm() {
 		Random r = new Random();
 		int x = r.nextInt(fieldLengths);
@@ -256,14 +257,11 @@ public class IceField {
 	private void gameWon() { gameWon = true; }
 	private void actionHandler(){
 		actionsLeft--;
-		if(actionsLeft == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
-			actionsLeft = maxActions;
-			nextPlayer();
-		}
+		if(actionsLeft == 0 || characters.get(currentPlayer).getTurnsInWater() != 0) nextPlayer();
 	}
 	public static int getMaxPlayer(){ return maxPlayer; }
 
-	//Inputra reagáló fv-ek
+	//Inputra reagáló fv-ek //VANNAK BENNE drawField() ek
 	public void nextPlayer() {
 		Random r = new Random();
 
@@ -280,6 +278,7 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
+		actionsLeft = maxActions;
 
 		drawField();
 	}
