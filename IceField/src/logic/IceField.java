@@ -25,7 +25,7 @@ public class IceField {
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
-		System.out.println(currentPlayer+1 + ". játékos hátralévő munkája: " + actionsLeft + " és testhője: " + characters.get(currentPlayer).getBodyHeat());
+		System.out.println(currentPlayer+1 + ". játékos hátralévő munkája: " + actionsLeft + ", testhője: " + characters.get(currentPlayer).getBodyHeat() + " és vízben töltött köre: " + characters.get(currentPlayer).getTurnsInWater());
 		System.out.println(
 				"Ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.shovelling) +
 				"  Kötél:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.savingWithRope) +
