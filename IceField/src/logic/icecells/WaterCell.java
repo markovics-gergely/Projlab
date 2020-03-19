@@ -39,7 +39,7 @@ public class WaterCell extends IceCell {
 				c.resetTurnsInWater();
 			}
 		}*/
-		Character chosen = ownField.getAndResetChosenToSave();
+		Character chosen = ownField.getChosenToSave();
 		if(chosen == null) return;
 		if(standingPlayers.contains(chosen)){
 			chosen.setFacingWay(from);

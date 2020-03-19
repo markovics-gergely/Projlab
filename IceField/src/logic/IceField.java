@@ -16,23 +16,13 @@ public class IceField {
 	private static int fieldLengths;
 	private int currentPlayer = 0;
 	private int actionsLeft;
-	private static int maxActions = 4;
+	private static int maxActions = 100;
 	public boolean gameWon = false;
 	public boolean gameLost = false;
 	private List<List<IceCell>> field = new ArrayList<>();
 	private ArrayList<Character> characters;
 	private WinChecker wc = new WinChecker();
     private int chosenToSave = -1;
-
-    public void setChosenToSave(int i){
-        if(i >= 0 && i < maxPlayer) chosenToSave = i;
-    }
-    public Character getAndResetChosenToSave(){
-        if(chosenToSave == -1) return null;
-        Character c = characters.get(chosenToSave);
-        chosenToSave = -1;
-        return c;
-    }
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
@@ -273,6 +263,16 @@ public class IceField {
 	public static int getMaxPlayer(){ return maxPlayer; }
 
 	//Inputra reagáló fv-ek //VANNAK BENNE drawField() ek
+	public void setChosenToSave(int i){
+		if(i >= 0 && i < maxPlayer) chosenToSave = i;
+	}
+	public Character getChosenToSave(){
+		if(chosenToSave == -1) return null;
+		Character c = characters.get(chosenToSave);
+		chosenToSave = -1;
+
+		return c;
+	}
 	public void nextPlayer() {
 		Random r = new Random();
 
@@ -280,8 +280,8 @@ public class IceField {
 			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
 		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
 
-		int i = r.nextInt(4);
-		if (i == 0) snowStorm();
+		//int i = r.nextInt(4);
+		//if (i == 0) snowStorm();
 
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)
@@ -316,10 +316,10 @@ public class IceField {
 	}
 	public void usePlayerItem(PlayerActions pa) {
 		if(pa == PlayerActions.assemblingEssentials) useEssentialItems();
-		else {
-			characters.get(currentPlayer).useItem(pa);
-			actionHandler();
-		}
+		else characters.get(currentPlayer).useItem(pa);
+
+		actionHandler();
+
 		drawField(); //CSAK TESZT
 	}
 	public void useAbility() {

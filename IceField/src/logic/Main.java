@@ -28,7 +28,7 @@ public class Main {
             case "eat" : field.usePlayerItem(PlayerActions.eating); break;
             case "dig": field.usePlayerItem(PlayerActions.shovelling); break;
             case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break;
-            case "save" : field.usePlayerItem(PlayerActions.savingWithRope); break;
+            case "save" : field.setChosenToSave(selectPlayer()); field.usePlayerItem(PlayerActions.savingWithRope); break;
             case "assemble" : field.usePlayerItem(PlayerActions.assemblingEssentials); break;
             case "ability" : field.useAbility(); break;
             case "mine": field.mineActualCell(); break;
@@ -43,5 +43,11 @@ public class Main {
             case "pass" : field.nextPlayer(); break;
             default : System.out.println("Nincs ilyen opció!"); break;
         }
+    }
+    public static int selectPlayer(){
+        System.out.println("Kit akarsz kimenteni?");
+        Scanner saveScan = new Scanner(System.in);
+        int c = saveScan.nextInt();
+        return c;
     }
 }
