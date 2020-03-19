@@ -1,13 +1,11 @@
 package logic.characters;
 
 import logic.icecells.IceCell;
-import logic.items.EssentialItem;
 import logic.items.Items;
 import logic.items.PlayerActions;
 import logic.Way;
 import logic.items.BackPack;
 
-import java.util.HashMap;
 import static logic.Way.up;
 
 public abstract class Character {
@@ -63,7 +61,7 @@ public abstract class Character {
 		else
 			i = backpack.hasItem(pa);
 		if(i != null) i.use(this);
-		else if(pa == PlayerActions.shovelling) dig(false);
+		else if(pa == PlayerActions.shoveling) dig(false);
 	}
 	public void useEssentials() {
 		Items ei = backpack.hasItem(PlayerActions.assemblingEssentials);

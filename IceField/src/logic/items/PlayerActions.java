@@ -1,7 +1,7 @@
 package logic.items;
 
 public enum PlayerActions {
-    shovelling,
+    shoveling,
     savingWithRope,
     eating,
     wearingSuit,

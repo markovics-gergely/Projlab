@@ -26,7 +26,7 @@ public class Main {
     public static void action(String ac, IceField field){
         switch(ac){
             case "eat" : field.usePlayerItem(PlayerActions.eating); break;
-            case "dig": field.usePlayerItem(PlayerActions.shovelling); break;
+            case "dig": field.usePlayerItem(PlayerActions.shoveling); break;
             case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break;
             case "save" : field.setChosenToSave(selectPlayer()); field.usePlayerItem(PlayerActions.savingWithRope); break;
             case "assemble" : field.usePlayerItem(PlayerActions.assemblingEssentials); break;

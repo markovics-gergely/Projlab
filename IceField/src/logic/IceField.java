@@ -28,7 +28,7 @@ public class IceField {
 	private void drawField(){
 		System.out.println(currentPlayer+1 + ". játékos hátralévő munkája: " + actionsLeft + ", testhője: " + characters.get(currentPlayer).getBodyHeat() + " és vízben töltött köre: " + characters.get(currentPlayer).getTurnsInWater());
 		System.out.println(
-				"Ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.shovelling) +
+				"Ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.shoveling) +
 				"  Kötél:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.savingWithRope) +
 				"  Ruha:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.wearingSuit) +
 				"  Étel:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.eating) +
@@ -157,10 +157,9 @@ public class IceField {
 			cellTable[y][x] = 2;
 		}
 
-		int itemNumber = 0;
 		int essentialID = 0;
 		for (PlayerActions pa : PlayerActions.values()) {
-			itemNumber = (pa == PlayerActions.eating) ? 2 * maxPlayer : maxPlayer - 1;
+			int itemNumber = (pa == PlayerActions.eating) ? 2 * maxPlayer : maxPlayer - 1;
 			if (pa == PlayerActions.assemblingEssentials) itemNumber = 3;
 			for (int i = 0; i < itemNumber; i++) {
 				while (cellTable[y][x] != 0) {
@@ -194,7 +193,7 @@ public class IceField {
 		Items item;
 		switch (pa){
 			case eating: item = new Food(); break;
-			case shovelling: item = new Shovel(); break;
+			case shoveling: item = new Shovel(); break;
 			case wearingSuit: item = new Divingsuit(); break;
 			case savingWithRope: item = new Rope(); break;
 			default: item = new EssentialItem(essentialID, wc); break;
@@ -275,12 +274,6 @@ public class IceField {
 	}
 	public void nextPlayer() {
 		Random r = new Random();
-
-		do {
-			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
-			//Ide hivj egy gameLose-t ha az összes játékos getTurnsInWater() != 0
-		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
-
 		int i = r.nextInt(4);
 		if (i == 0) snowStorm();
 
@@ -290,6 +283,15 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
+
+		gameLost = true;
+		for(Character c : characters) if(c.getTurnsInWater() == 0) gameLost = false;
+		if(!gameLost){
+			do {
+				currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
+			} while(characters.get(currentPlayer).getTurnsInWater() != 0);
+		}
+
 		actionsLeft = maxActions;
 
 		drawField();
