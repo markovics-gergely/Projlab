@@ -25,7 +25,7 @@ public abstract class IceCell {
 
 	public IceCell(int c, IceField icef){
 		Random r = new Random();
-		snow = /*r.nextInt(maxSnow + 1)*/0;
+		snow = r.nextInt(maxSnow + 1);
 		capacity = c;
 		ownField = icef;
 	}

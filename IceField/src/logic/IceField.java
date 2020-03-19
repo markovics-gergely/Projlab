@@ -16,7 +16,7 @@ public class IceField {
 	private static int fieldLengths;
 	private int currentPlayer = 0;
 	private int actionsLeft;
-	private static int maxActions = 100;
+	private static int maxActions = 4;
 	public boolean gameWon = false;
 	public boolean gameLost = false;
 	private List<List<IceCell>> field = new ArrayList<>();
@@ -278,10 +278,11 @@ public class IceField {
 
 		do {
 			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
+			//Ide hivj egy gameLose-t ha az összes játékos getTurnsInWater() != 0
 		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
 
-		//int i = r.nextInt(4);
-		//if (i == 0) snowStorm();
+		int i = r.nextInt(4);
+		if (i == 0) snowStorm();
 
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)
