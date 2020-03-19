@@ -29,7 +29,7 @@ public abstract class Character {
 
 	public void move() {
 		IceCell ic = ownCell.getNeighbour(facingWay);
-		int a = 0; // random int
+		String str = "PROJLAB";
 		if(ic != null){
 			ownCell.removeCharacter(this);
 			ic.accept(this);
