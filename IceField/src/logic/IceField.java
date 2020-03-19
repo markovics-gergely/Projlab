@@ -22,6 +22,17 @@ public class IceField {
 	private List<List<IceCell>> field = new ArrayList<>();
 	private ArrayList<Character> characters;
 	private WinChecker wc = new WinChecker();
+    private int chosenToSave = -1;
+
+    public void setChosenToSave(int i){
+        if(i >= 0 && i < maxPlayer) chosenToSave = i;
+    }
+    public Character getAndResetChosenToSave(){
+        if(chosenToSave == -1) return null;
+        Character c = characters.get(chosenToSave);
+        chosenToSave = -1;
+        return c;
+    }
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){

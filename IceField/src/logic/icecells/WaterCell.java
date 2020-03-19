@@ -15,7 +15,7 @@ public class WaterCell extends IceCell {
 
 	public void setBroken() { broken = true; }
 	public void movePlayerOut(Way from) {
-		if(standingPlayers.size() != 0){
+		/*if(standingPlayers.size() != 0){
 			Character c = null;
 
 			int i = 0;
@@ -38,6 +38,13 @@ public class WaterCell extends IceCell {
 				c.move();
 				c.resetTurnsInWater();
 			}
+		}*/
+		Character chosen = ownField.getAndResetChosenToSave();
+		if(chosen == null) return;
+		if(standingPlayers.contains(chosen)){
+			chosen.setFacingWay(from);
+			chosen.move();
+			chosen.resetTurnsInWater();
 		}
 	}
 
