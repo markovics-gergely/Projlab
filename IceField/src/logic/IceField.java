@@ -15,8 +15,6 @@ public class IceField {
 	private static int maxPlayer;
 	private static int fieldLengths;
 	private int currentPlayer = 0;
-	private int actionsLeft;
-	private static int maxActions = 100;
 	public boolean gameWon = false;
 	public boolean gameLost = false;
 	private List<List<IceCell>> field = new ArrayList<>();
@@ -26,7 +24,7 @@ public class IceField {
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
-		System.out.println(currentPlayer+1 + ". játékos hátralévő munkája: " + actionsLeft + ", testhője: " + characters.get(currentPlayer).getBodyHeat() + " és vízben töltött köre: " + characters.get(currentPlayer).getTurnsInWater());
+		System.out.println(currentPlayer+1 + ". játékos hátralévő munkája: " + characters.get(currentPlayer).getActionsLeft() + ", testhője: " + characters.get(currentPlayer).getBodyHeat() + " és vízben töltött köre: " + characters.get(currentPlayer).getTurnsInWater());
 		System.out.println(
 				"Ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.shoveling) +
 				"  Kötél:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.savingWithRope) +
@@ -64,10 +62,8 @@ public class IceField {
 		System.out.println();
 	} //CSAK TESZT, ÉS KISZEDNI AZ INPUT FV EK VÉGÉRŐL
 
-	//Konstruktor
 	public IceField(ArrayList<Character> c){
 		maxPlayer = c.size();
-		actionsLeft = maxActions;
 		fieldLengths = maxPlayer + 4;
 		characters = c;
 
@@ -256,18 +252,25 @@ public class IceField {
 	}
 	private void gameLost() { gameLost = true; }
 	private void gameWon() { gameWon = true; }
-	public void actionHandler(boolean b){
-		if(b) {
-			actionsLeft--;
-			if (actionsLeft == 0 || characters.get(currentPlayer).getTurnsInWater() != 0) nextPlayer();
+
+	private void actionHandler(){
+		if(characters.get(currentPlayer).getActionsLeft() == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
+			characters.get(currentPlayer).resetActionsLeft();
+			nextPlayer();
 		}
-		else actionsLeft++;
 	}
 	public static int getMaxPlayer(){ return maxPlayer; }
 
 	//Inputra reagáló fv-ek //VANNAK BENNE drawField() ek
 	public void setChosenToSave(int i){
 		if(i >= 0 && i < maxPlayer) chosenToSave = i;
+	}
+	public Character getChosenToSave(){
+		if(chosenToSave == -1) return null;
+		Character c = characters.get(chosenToSave);
+		chosenToSave = -1;
+
+		return c;
 	}
 	public void nextPlayer() {
 		Random r = new Random();
@@ -289,9 +292,28 @@ public class IceField {
 			} while(characters.get(currentPlayer).getTurnsInWater() != 0);
 		}
 
-		actionsLeft = maxActions;
-
 		drawField();
+	}
+	private void useEssentialItems() {
+		IceCell ic = characters.get(0).getOwnCell();
+
+		for(Character ch : characters){
+			if(ch.getOwnCell() != ic)
+				return;
+		}
+		for(Character ch : characters){
+			ch.useEssentials();
+		}
+
+		if(wc.isAssembled()){
+			gameWon();
+			characters.get(currentPlayer).loseOneAction();
+		}
+		else wc.resetAssembledItems();
+
+		actionHandler();
+
+		drawField(); //CSAK TESZT
 	}
 	public void setPlayerWay(Way w) {
 		characters.get(currentPlayer).setFacingWay(w);
@@ -300,56 +322,26 @@ public class IceField {
 		if(pa == PlayerActions.assemblingEssentials) useEssentialItems();
 		else characters.get(currentPlayer).useItem(pa);
 
-		actionHandler(true);
+		actionHandler();
 
 		drawField(); //CSAK TESZT
-	} //Munka
+	}
 	public void useAbility() {
 		characters.get(currentPlayer).ability();
-		actionHandler(true);
+		actionHandler();
 
 		drawField(); //CSAK TESZT
-	} //Munka
+	}
 	public void movePlayer(Way w) {
 		setPlayerWay(w);
 		characters.get(currentPlayer).move();
-		actionHandler(true);
+		actionHandler();
 
 		drawField(); //CSAK TESZT
-	} //Munka
+	}
 	public void mineActualCell() {
 		characters.get(currentPlayer).mine();
-		actionHandler(true);
-
-		drawField(); //CSAK TESZT
-	} //Munka
-
-	//Inputra reagáló fv-eket segíti
-	public Character getChosenToSave(){
-		if(chosenToSave == -1) return null;
-		Character c = characters.get(chosenToSave);
-		chosenToSave = -1;
-
-		return c;
-	}
-	private void useEssentialItems() {
-		IceCell ic = characters.get(0).getOwnCell();
-
-		for(Character ch : characters){
-			if(ch.getOwnCell() != ic) {
-				actionHandler(false);
-				return;
-			}
-		}
-
-		for(Character ch : characters){
-			ch.useEssentials();
-		}
-		if(wc.isAssembled()) gameWon();
-		else {
-			actionHandler(false);
-			wc.resetAssembledItems();
-		}
+		actionHandler();
 
 		drawField(); //CSAK TESZT
 	}

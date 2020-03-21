@@ -1,6 +1,5 @@
 package logic.characters;
 
-import logic.IceField;
 import logic.icecells.IceCell;
 import logic.items.Items;
 import logic.items.PlayerActions;
@@ -14,54 +13,23 @@ public abstract class Character {
 	private int bodyHeat;
 	private int turnsInWater = 0;
 	private boolean wearingDivingSuit = false;
-	private Way facingWay;
+	private Way facingWay = Way.up;
 	private IceCell ownCell;
 	private BackPack backpack;
-	protected IceField ownField;
+
+	private static int maxActions = 4;
+	private int actionsLeft;
+
+	public int getActionsLeft(){ return actionsLeft; }
+	public void resetActionsLeft(){ actionsLeft = maxActions; }
+	public void loseOneAction(){ actionsLeft--; }
 
 	Character(int mb, IceCell ic){
 		maxBodyHeat = mb;
-		bodyHeat = mb;
+		bodyHeat = maxBodyHeat;
 		ownCell = ic;
 		backpack = new BackPack();
-		facingWay = up;
-	}
-
-	public boolean gainOneHeat() {
-		bodyHeat++;
-		if(bodyHeat > maxBodyHeat) {
-			bodyHeat = maxBodyHeat;
-			return false;
-		}
-		return true;
-	}
-	public boolean dig(boolean withShovel) {
-		if(!withShovel) ownField.actionHandler(false);
-		return ownCell.loseSnow(withShovel);
-	}
-	public boolean wearDivingSuit() {
-		if(wearingDivingSuit) return false;
-		else {
-			wearingDivingSuit = true;
-			return true;
-		}
-	}
-	public void useEssentials() {
-		Items ei = backpack.hasItem(PlayerActions.assemblingEssentials);
-		if(ei != null) ei.use(this);
-	}
-	public void useItem(PlayerActions pa) {
-		Items i;
-		if(pa == PlayerActions.eating)
-			i = backpack.useFood();
-		else
-			i = backpack.hasItem(pa);
-		if(i != null){
-			if(!i.use(this)) ownField.actionHandler(false);
-		}
-		else if(pa == PlayerActions.shoveling) dig(false);
-			//Nincs nála az adott tárgy és nem is lesz a dig miatt kétszer meghivva az actionHandler
-		else ownField.actionHandler(false);
+		actionsLeft = maxActions;
 	}
 
 	public void move() {
@@ -69,13 +37,21 @@ public abstract class Character {
 		if(ic != null){
 			ownCell.removeCharacter(this);
 			ic.accept(this);
+			loseOneAction();
 		}
-		if(ic == null) ownField.actionHandler(false);
+	}
+	public void dig(boolean withShovel) {
+		if(ownCell.loseSnow(withShovel)) loseOneAction();
 	}
 	public void mine() { ownCell.mine(this); }
+	public void gainOneHeat() {
+		if(bodyHeat != maxBodyHeat){
+			bodyHeat++;
+			loseOneAction();
+		}
+	}
 	public void loseOneHeat() {
-		bodyHeat--;
-		if(bodyHeat < 0) bodyHeat = 0;
+		if(bodyHeat != 0) bodyHeat--;
 	}
 	public void setOwnCell(IceCell ic) { ownCell = ic;}
 	public IceCell getOwnCell() { return ownCell;}
@@ -83,12 +59,33 @@ public abstract class Character {
 	public int getTurnsInWater() { return turnsInWater;}
 	public void resetTurnsInWater() { turnsInWater = 0;}
 	public boolean putItemtoBackPack(Items it, PlayerActions pa) { return backpack.addItem(it, pa); }
+	public void wearDivingSuit() {
+		if(!wearingDivingSuit){
+			wearingDivingSuit = true;
+			loseOneAction();
+		}
+	}
 	public boolean getDivingSuit() { return wearingDivingSuit;}
 	public void setFacingWay(Way w) { facingWay = w;}
 	public Way getFacingWay() { return facingWay;}
+	public void useItem(PlayerActions pa) {
+		Items item;
+		if(pa == PlayerActions.eating)
+			item = backpack.useFood();
+		else
+			item = backpack.hasItem(pa);
+		if(item != null){
+			item.use(this);
+		}
+		else if(pa == PlayerActions.shoveling)
+			dig(false);
+	}
+	public void useEssentials() {
+		Items ei = backpack.hasItem(PlayerActions.assemblingEssentials);
+		if(ei != null) ei.use(this);
+	}
 	public int getBodyHeat() { return bodyHeat; }
 	public BackPack getBackPack(){ return backpack; }
-	public void setOwnField(IceField of){ ownField = of;}
 
 	public abstract void ability();
 }
