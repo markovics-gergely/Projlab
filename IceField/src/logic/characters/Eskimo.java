@@ -1,5 +1,6 @@
 package logic.characters;
 
+import logic.IceField;
 import logic.icecells.IceCell;
 
 public class Eskimo extends Character {
@@ -8,6 +9,7 @@ public class Eskimo extends Character {
 		super(5, ic);
 	}
 	public void ability() {
-		getOwnCell().setIgloo(true);
+		if(getOwnCell().setIgloo(true))
+			ownField.actionHandler(false);
 	}
 }

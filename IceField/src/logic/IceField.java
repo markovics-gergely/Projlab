@@ -16,7 +16,7 @@ public class IceField {
 	private static int fieldLengths;
 	private int currentPlayer = 0;
 	private int actionsLeft;
-	private static int maxActions = 4;
+	private static int maxActions = 100;
 	public boolean gameWon = false;
 	public boolean gameLost = false;
 	private List<List<IceCell>> field = new ArrayList<>();
@@ -64,6 +64,7 @@ public class IceField {
 		System.out.println();
 	} //CSAK TESZT, ÉS KISZEDNI AZ INPUT FV EK VÉGÉRŐL
 
+	//Konstruktor
 	public IceField(ArrayList<Character> c){
 		maxPlayer = c.size();
 		actionsLeft = maxActions;
@@ -255,22 +256,18 @@ public class IceField {
 	}
 	private void gameLost() { gameLost = true; }
 	private void gameWon() { gameWon = true; }
-	private void actionHandler(){
-		actionsLeft--;
-		if(actionsLeft == 0 || characters.get(currentPlayer).getTurnsInWater() != 0) nextPlayer();
+	public void actionHandler(boolean b){
+		if(b) {
+			actionsLeft--;
+			if (actionsLeft == 0 || characters.get(currentPlayer).getTurnsInWater() != 0) nextPlayer();
+		}
+		else actionsLeft++;
 	}
 	public static int getMaxPlayer(){ return maxPlayer; }
 
 	//Inputra reagáló fv-ek //VANNAK BENNE drawField() ek
 	public void setChosenToSave(int i){
 		if(i >= 0 && i < maxPlayer) chosenToSave = i;
-	}
-	public Character getChosenToSave(){
-		if(chosenToSave == -1) return null;
-		Character c = characters.get(chosenToSave);
-		chosenToSave = -1;
-
-		return c;
 	}
 	public void nextPlayer() {
 		Random r = new Random();
@@ -296,24 +293,6 @@ public class IceField {
 
 		drawField();
 	}
-	private void useEssentialItems() {
-		IceCell ic = characters.get(0).getOwnCell();
-
-		for(Character ch : characters){
-			if(ch.getOwnCell() != ic)
-				return;
-		}
-		for(Character ch : characters){
-			ch.useEssentials();
-		}
-
-		if(wc.isAssembled()) gameWon();
-		else wc.resetAssembledItems();
-
-		actionHandler();
-
-		drawField(); //CSAK TESZT
-	}
 	public void setPlayerWay(Way w) {
 		characters.get(currentPlayer).setFacingWay(w);
 	}
@@ -321,26 +300,56 @@ public class IceField {
 		if(pa == PlayerActions.assemblingEssentials) useEssentialItems();
 		else characters.get(currentPlayer).useItem(pa);
 
-		actionHandler();
+		actionHandler(true);
 
 		drawField(); //CSAK TESZT
-	}
+	} //Munka
 	public void useAbility() {
 		characters.get(currentPlayer).ability();
-		actionHandler();
+		actionHandler(true);
 
 		drawField(); //CSAK TESZT
-	}
+	} //Munka
 	public void movePlayer(Way w) {
 		setPlayerWay(w);
 		characters.get(currentPlayer).move();
-		actionHandler();
+		actionHandler(true);
 
 		drawField(); //CSAK TESZT
-	}
+	} //Munka
 	public void mineActualCell() {
 		characters.get(currentPlayer).mine();
-		actionHandler();
+		actionHandler(true);
+
+		drawField(); //CSAK TESZT
+	} //Munka
+
+	//Inputra reagáló fv-eket segíti
+	public Character getChosenToSave(){
+		if(chosenToSave == -1) return null;
+		Character c = characters.get(chosenToSave);
+		chosenToSave = -1;
+
+		return c;
+	}
+	private void useEssentialItems() {
+		IceCell ic = characters.get(0).getOwnCell();
+
+		for(Character ch : characters){
+			if(ch.getOwnCell() != ic) {
+				actionHandler(false);
+				return;
+			}
+		}
+
+		for(Character ch : characters){
+			ch.useEssentials();
+		}
+		if(wc.isAssembled()) gameWon();
+		else {
+			actionHandler(false);
+			wc.resetAssembledItems();
+		}
 
 		drawField(); //CSAK TESZT
 	}

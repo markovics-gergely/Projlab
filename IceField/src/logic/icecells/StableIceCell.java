@@ -19,10 +19,18 @@ public class StableIceCell extends IceCell  {
 	public void mine(Character ch) {
 		if(snow == 0 && item != null){
 			if(item.equip(ch)) removeItem();
+			else ownField.actionHandler(false);
+		}
+		else ownField.actionHandler(false);
+	}
+
+	public boolean setIgloo(boolean b) {
+		if(hasIgloo == b) return true;
+		else {
+			hasIgloo = b;
+			return false;
 		}
 	}
-	public void setIgloo(boolean b) { hasIgloo = b;}
-
 	public boolean safeToStart(){ return true; }
 	public void snowing() {
 		gainOneSnow();

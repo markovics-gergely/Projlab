@@ -5,10 +5,13 @@ import logic.characters.Character;
 
 public class Rope implements Items {
 
-	public void use(Character actualch) {
+	public boolean use(Character actualch) {
+		boolean used = false;
 		for(Way w : Way.values()) {
-			actualch.getOwnCell().getNeighbour(w).movePlayerOut(w.opposite());
+			if(actualch.getOwnCell().getNeighbour(w).movePlayerOut(w.opposite()))
+				used = true;
 		}
+		return used;
 	}
 	public boolean equip(Character ch) { return ch.putItemtoBackPack(this, PlayerActions.savingWithRope);}
 }

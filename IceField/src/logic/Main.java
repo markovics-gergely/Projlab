@@ -15,6 +15,10 @@ public class Main {
         ch.add(new Eskimo(null));
 
         IceField field = new IceField(ch);
+        ch.get(0).setOwnField(field);
+        ch.get(1).setOwnField(field);
+        ch.get(2).setOwnField(field);
+
         while(true){
             Scanner actionScan = new Scanner(System.in);
             String ac = actionScan.nextLine();
@@ -25,21 +29,21 @@ public class Main {
     }
     public static void action(String ac, IceField field){
         switch(ac){
-            case "eat" : field.usePlayerItem(PlayerActions.eating); break;
-            case "dig": field.usePlayerItem(PlayerActions.shoveling); break;
-            case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break;
-            case "save" : field.setChosenToSave(selectPlayer()); field.usePlayerItem(PlayerActions.savingWithRope); break;
-            case "assemble" : field.usePlayerItem(PlayerActions.assemblingEssentials); break;
-            case "ability" : field.useAbility(); break;
-            case "mine": field.mineActualCell(); break;
+            case "eat" : field.usePlayerItem(PlayerActions.eating); break; //Munka
+            case "dig": field.usePlayerItem(PlayerActions.shoveling); break; //munka
+            case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break; //Munka
+            case "save" : field.setChosenToSave(selectPlayer()); field.usePlayerItem(PlayerActions.savingWithRope); break; //Munka
+            case "assemble" : field.usePlayerItem(PlayerActions.assemblingEssentials); break; //Munka
+            case "ability" : field.useAbility(); break; //Munka
+            case "mine": field.mineActualCell(); break; //Munka
             case "setup" : field.setPlayerWay(Way.up); break;
             case "setdown" : field.setPlayerWay(Way.down); break;
             case "setleft" : field.setPlayerWay(Way.left); break;
             case "setright" : field.setPlayerWay(Way.right); break;
-            case "u" : field.movePlayer(Way.up); break;
-            case "d" : field.movePlayer(Way.down); break;
-            case "l" : field.movePlayer(Way.left); break;
-            case "r" : field.movePlayer(Way.right); break;
+            case "u" : field.movePlayer(Way.up); break; //Munka
+            case "d" : field.movePlayer(Way.down); break; //Munka
+            case "l" : field.movePlayer(Way.left); break; //Munka
+            case "r" : field.movePlayer(Way.right); break; //Munka
             case "pass" : field.nextPlayer(); break;
             default : System.out.println("Nincs ilyen opció!"); break;
         }

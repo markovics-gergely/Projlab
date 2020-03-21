@@ -1,5 +1,6 @@
 package logic.characters;
 
+import logic.IceField;
 import logic.Way;
 import logic.icecells.IceCell;
 
@@ -10,6 +11,10 @@ public class Explorer extends Character {
 	}
 	public void ability() {
 		IceCell ic = getOwnCell().getNeighbour(getFacingWay());
-		if(ic != null) ic.setCapacityKnown();
+		if(ic != null)
+			if (ic.setCapacityKnown())
+				ownField.actionHandler(false);
+
+		if(ic == null) ownField.actionHandler(false);
 	}
 }

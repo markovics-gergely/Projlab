@@ -30,10 +30,20 @@ public abstract class IceCell {
 		ownField = icef;
 	}
 
-	public void setCapacityKnown() { capacityKnown = true;}
-	public void loseSnow(boolean withShovel) {
+	public boolean setCapacityKnown() {
+		if(capacityKnown) return true;
+		else {
+			capacityKnown = true;
+			return false;
+		}
+	}
+	public boolean loseSnow(boolean withShovel) {
 		snow = (withShovel) ? snow - 2 : snow - 1;
-		if(snow < 0) snow = 0;
+		if(snow < 0) {
+			snow = 0;
+			return false;
+		}
+		return true;
 	}
 	public void gainOneSnow() {
 		snow ++;
@@ -49,9 +59,9 @@ public abstract class IceCell {
 	public void removeCharacter(Character ch) { standingPlayers.remove(ch); }
 	public void addCharacter(Character ch) { standingPlayers.add(ch); }
 
-	public void movePlayerOut(Way from) {}
+	public boolean movePlayerOut(Way from) {return false;}
 	public void mine(Character actual) {}
-	public void setIgloo(boolean b) {}
+	public abstract boolean setIgloo(boolean b);
 	public abstract boolean safeToStart();
 	public abstract void accept(Character ch);
 	public abstract void snowing();
