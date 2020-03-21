@@ -15,9 +15,6 @@ public class Main {
         ch.add(new Eskimo(null));
 
         IceField field = new IceField(ch);
-        ch.get(0).setOwnField(field);
-        ch.get(1).setOwnField(field);
-        ch.get(2).setOwnField(field);
 
         while(true){
             Scanner actionScan = new Scanner(System.in);
