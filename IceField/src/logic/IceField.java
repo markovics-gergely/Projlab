@@ -275,7 +275,7 @@ public class IceField {
 
 		Random r = new Random();
 		int i = r.nextInt(4);
-		//if (i == 0) snowStorm();
+		if (i == 0) snowStorm();
 
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)

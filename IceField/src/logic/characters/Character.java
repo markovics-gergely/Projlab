@@ -16,13 +16,8 @@ public abstract class Character {
 	private Way facingWay = Way.up;
 	private IceCell ownCell;
 	private BackPack backpack;
-
 	private static int maxActions = 4;
 	private int actionsLeft;
-
-	public int getActionsLeft(){ return actionsLeft; }
-	public void resetActionsLeft(){ actionsLeft = maxActions; }
-	public void loseOneAction(){ actionsLeft--; }
 
 	Character(int mb, IceCell ic){
 		maxBodyHeat = mb;
@@ -77,7 +72,7 @@ public abstract class Character {
 		if(item != null){
 			item.use(this);
 		}
-		else if(pa == PlayerActions.shoveling)
+		else if(pa == PlayerActions.shoveling && bodyHeat != maxBodyHeat)
 			dig(false);
 	}
 	public void useEssentials() {
@@ -86,6 +81,9 @@ public abstract class Character {
 	}
 	public int getBodyHeat() { return bodyHeat; }
 	public BackPack getBackPack(){ return backpack; }
+	public int getActionsLeft(){ return actionsLeft; }
+	public void resetActionsLeft(){ actionsLeft = maxActions; }
+	public void loseOneAction(){ actionsLeft--; }
 
 	public abstract void ability();
 }
