@@ -275,7 +275,7 @@ public class IceField {
 
 		Random r = new Random();
 		int i = r.nextInt(4);
-		if (i == 0) snowStorm();
+		//if (i == 0) snowStorm();
 
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)
@@ -283,16 +283,14 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
+		//Ezt nem fix hogy jó, de az unstable miatt került bele, nem lépett ki unstablenél.
+		int countAll = 0;
+		do {
+			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
+			countAll++;
+			if(countAll == maxPlayer){ gameLost = true; break; }
+		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
 
-		gameLost = true;
-		for(Character c : characters) if(c.getTurnsInWater() == 0) gameLost = false;
-		if(!gameLost){
-			do {
-				currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
-			} while(characters.get(currentPlayer).getTurnsInWater() != 0);
-		}
-
-		characters.get(currentPlayer).resetActionsLeft();
 		drawField();
 	}
 	private void useEssentialItems() {

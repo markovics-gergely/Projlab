@@ -65,14 +65,14 @@ public abstract class Character {
 	public Way getFacingWay() { return facingWay;}
 	public void useItem(PlayerActions pa) {
 		Items item;
-		if(pa == PlayerActions.eating)
+		if(pa == PlayerActions.eating && bodyHeat != maxBodyHeat)
 			item = backpack.useFood();
 		else
 			item = backpack.hasItem(pa);
 		if(item != null){
 			item.use(this);
 		}
-		else if(pa == PlayerActions.shoveling && bodyHeat != maxBodyHeat)
+		else if(pa == PlayerActions.shoveling)
 			dig(false);
 	}
 	public void useEssentials() {

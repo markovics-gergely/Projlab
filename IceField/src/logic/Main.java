@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 //Hibák:
 //Rope rossz kiválasztás(Ropeban kommentelve, elv megcsinálva)
-//Vége nem működik(Assemble megcsinálva, a vízbe esés és hő csökkenés nincs)
 //Csökken az food amikor max a hp(Elv useItem ben javítva)
 //Nem resetelődött passnál a kör (Elv megcsinálva)
 
