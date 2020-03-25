@@ -288,7 +288,7 @@ public class IceField {
 		do {
 			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
 			countAll++;
-			if(countAll == maxPlayer){ gameLost = true; break; }
+			if(countAll == maxPlayer){ gameLost(); break; }
 		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
 
 		drawField();
