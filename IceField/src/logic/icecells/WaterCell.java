@@ -15,30 +15,6 @@ public class WaterCell extends IceCell {
 
 	public void setBroken() { broken = true; }
 	public boolean movePlayerOut(Way from) {
-		/*if(standingPlayers.size() != 0){
-			Character c = null;
-
-			int i = 0;
-			for(Character ch : standingPlayers){
-				if(ch.getTurnsInWater() > i && ch.getDivingSuit()) {
-					i = ch.getTurnsInWater();
-					c = ch;
-				}
-			}
-			if(i == 0){
-				for(Character ch : standingPlayers){
-					if(ch.getTurnsInWater() > i && !ch.getDivingSuit()) {
-						i = ch.getTurnsInWater();
-						c = ch;
-					}
-				}
-			}
-			if(c != null) {
-				c.setFacingWay(from);
-				c.move();
-				c.resetTurnsInWater();
-			}
-		}*/
 		Character chosen = ownField.getChosenToSave();
 		if(chosen != null && standingPlayers.contains(chosen)){
 			chosen.setFacingWay(from);

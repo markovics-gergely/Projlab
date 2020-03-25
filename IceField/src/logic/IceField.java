@@ -255,7 +255,6 @@ public class IceField {
 
 	private void actionHandler(){
 		if(characters.get(currentPlayer).getActionsLeft() == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
-			characters.get(currentPlayer).resetActionsLeft();
 			nextPlayer();
 		}
 	}
@@ -292,6 +291,7 @@ public class IceField {
 			} while(characters.get(currentPlayer).getTurnsInWater() != 0);
 		}
 
+		characters.get(currentPlayer).resetActionsLeft();
 		drawField();
 	}
 	private void useEssentialItems() {
