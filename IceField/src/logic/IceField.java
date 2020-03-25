@@ -252,10 +252,8 @@ public class IceField {
 	}
 	private void gameLost() { gameLost = true; }
 	private void gameWon() { gameWon = true; }
-
 	private void actionHandler(){
 		if(characters.get(currentPlayer).getActionsLeft() == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
-			characters.get(currentPlayer).resetActionsLeft();
 			nextPlayer();
 		}
 	}
@@ -273,9 +271,11 @@ public class IceField {
 		return c;
 	}
 	public void nextPlayer() {
+		characters.get(currentPlayer).resetActionsLeft();
+
 		Random r = new Random();
 		int i = r.nextInt(4);
-		if (i == 0) snowStorm();
+		//if (i == 0) snowStorm();
 
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)

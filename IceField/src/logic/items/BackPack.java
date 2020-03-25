@@ -23,11 +23,6 @@ public class BackPack {
 	public Food useFood() {
 		Food f = null;
 
-		//Ezt most nem akarom tesztelni de ha már létrejött egy kajás arraylist, de elfogy belőle a kaja attól még ez az if sztem true-t fog dobni szerintem, mert
-		//megmarad a lista, a hashmapes nevével együtt csak nem lesz benne semmi.
-		//Emiatt lehet kellene mellé egy && obtainedItems.get(PlayerActions.eating).size() != 0
-		//Beleraktam, remélem igy okés nem tudom hogy kilép e egyből az ifből ha az első nem igaz, mert ha nem akkor hibát doba a másdoik részénél ha null az első
-		//ha így van akkor csak rakj két ifet egymás alá
 		if(obtainedItems.containsKey(PlayerActions.eating) && obtainedItems.get(PlayerActions.eating).size() != 0){
 			int lastIndex = obtainedItems.get(PlayerActions.eating).size()-1;
 			f = (Food)obtainedItems.get(PlayerActions.eating).get(lastIndex);
