@@ -18,20 +18,13 @@ import java.util.Scanner;
 //IceField  -> nextPlayer() -> //if (i == 0) snowStorm();
 //IceCell   -> Konstruktor  -> snow = /*r.nextInt(maxSnow + 1)*//*0;
 public class Main {
-    public static void test1() {
-        IceField anyad = new IceField();
-        IceCell ownCell = new StableIceCell();
-        Character actual = new Explorer();
-
-    }
     public static void main(String[] args) {
-        /*ArrayList<Character> ch = new ArrayList<>();
+        ArrayList<Character> ch = new ArrayList<>();
         ch.add(new Explorer(null));
         ch.add(new Explorer(null));
         ch.add(new Eskimo(null));
 
         IceField field = new IceField(ch);
-
 
         while(true){
             Scanner actionScan = new Scanner(System.in);
@@ -39,8 +32,8 @@ public class Main {
             action(ac, field);
             if(field.gameWon){ System.out.println("Nyertetek!"); break; }
             if(field.gameLost){ System.out.println("Vesztettetek!"); break; }
-        }*/
-        test1();
+        }
+
     }
     public static void action(String ac, IceField field){
         switch(ac){
