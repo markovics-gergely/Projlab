@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 public class IceField {
-	//lol
 	private static int maxPlayer;
 	private static int fieldLengths;
 	private int currentPlayer = 0;
@@ -279,7 +278,7 @@ public class IceField {
 		characters.get(currentPlayer).resetActionsLeft();
 
 		Random r = new Random();
-		int i = r.nextInt(4);
+		int i = r.nextInt(5);
 		//if (i == 0) snowStorm();
 
 		for(Character c : characters){
@@ -288,7 +287,13 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
-		//Ezt nem fix hogy jó, de az unstable miatt került bele, nem lépett ki unstablenél.
+
+		if(currentPlayer == maxPlayer-1) {
+			for (int y = 0; y < fieldLengths; y++)
+				for (int x = 0; x < fieldLengths; x++)
+					field.get(y).get(x).setTent(false);
+		}
+
 		int countAll = 0;
 		do {
 			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);

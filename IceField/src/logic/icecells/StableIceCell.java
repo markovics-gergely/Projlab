@@ -43,12 +43,14 @@ public class StableIceCell extends IceCell  {
 	public boolean safeToStart(){ return true; }
 	public void snowing() {
 		gainOneSnow();
-		if(!hasIgloo){
+		if(!hasIgloo && !hasTent){
 			for(Character ch : standingPlayers){
 				ch.loseOneHeat();
 			}
 		}
-		setIgloo(false);
+		if(hasIgloo && hasTent) setTent(false);
+		else if(hasIgloo) setIgloo(false);
+		else if (hasTent) setTent(false);
 	}
 	public void accept(Character ch) {
 		addCharacter(ch);
