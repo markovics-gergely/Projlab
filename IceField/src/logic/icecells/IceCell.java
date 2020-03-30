@@ -62,6 +62,7 @@ public abstract class IceCell {
 	public boolean movePlayerOut(Way from) { return false;}
 	public void mine(Character actual) {}
 	public boolean setIgloo(boolean b) { return false;}
+	public boolean setTent(boolean b) { return false;}
 	public abstract boolean safeToStart();
 	public abstract void accept(Character ch);
 	public abstract void snowing();

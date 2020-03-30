@@ -6,6 +6,7 @@ import logic.characters.Character;
 
 public class UnstableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
+	private boolean hasTent = false;
 
 	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
 
@@ -14,6 +15,13 @@ public class UnstableIceCell extends IceCell  {
 	}
 
 	public boolean safeToStart(){ return false; }
+	public boolean setTent(boolean b) {
+		if(hasTent == b) return false;
+		else {
+			hasTent = b;
+			return true;
+		}
+	}
 	public boolean setIgloo(boolean b) {
 		if(hasIgloo == b) return false;
 		else {

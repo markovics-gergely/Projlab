@@ -30,7 +30,9 @@ public class IceField {
 				"  Kötél:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.savingWithRope) +
 				"  Ruha:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.wearingSuit) +
 				"  Étel:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.eating) +
-				"  Plusz:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.assemblingEssentials)
+				"  Plusz:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.assemblingEssentials) +
+				"  Törékeny ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.fragileshoveling) +
+				"  Sátor:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.useTent)
 		); //TÖRÖLNI A BACKPACK CLASSBÓL.
 		System.out.print("Típus 0:St 1:Víz"); System.out.println();
 		System.out.print("2:Inst 3:Item    ");
@@ -193,6 +195,8 @@ public class IceField {
 			case shoveling: item = new Shovel(); break;
 			case wearingSuit: item = new Divingsuit(); break;
 			case savingWithRope: item = new Rope(); break;
+			case fragileshoveling:shoveling: item = new FragileShovel(); break;
+			case useTent: item = new Tent(); break;
 			default: item = new EssentialItem(essentialID, wc); break;
 		}
 		StableIceCell newCell = new StableIceCell(this, item);

@@ -6,8 +6,6 @@ import logic.items.PlayerActions;
 import logic.Way;
 import logic.items.BackPack;
 
-import static logic.Way.up;
-
 public abstract class Character {
 	private int maxBodyHeat;
 	private int bodyHeat;
@@ -16,7 +14,7 @@ public abstract class Character {
 	private Way facingWay = Way.up;
 	private IceCell ownCell;
 	private BackPack backpack;
-	private static int maxActions = 4;
+	private static int maxActions = 100;
 	private int actionsLeft;
 
 	Character(int mb, IceCell ic){

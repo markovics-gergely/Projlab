@@ -6,6 +6,7 @@ import logic.items.Items;
 
 public class StableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
+	private boolean hasTent = false;
 	private Items item;
 
 	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
@@ -28,6 +29,13 @@ public class StableIceCell extends IceCell  {
 		if(hasIgloo == b) return false;
 		else {
 			hasIgloo = b;
+			return true;
+		}
+	}
+	public boolean setTent(boolean b) {
+		if(hasTent == b) return false;
+		else {
+			hasTent = b;
 			return true;
 		}
 	}
