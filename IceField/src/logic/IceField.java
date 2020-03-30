@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 public class IceField {
+	//lol
 	private static int maxPlayer;
 	private static int fieldLengths;
 	private int currentPlayer = 0;
