@@ -3,19 +3,20 @@ package logic.icecells;
 import logic.IceField;
 import logic.Way;
 import logic.characters.Character;
-
+import logic.characters.Bear;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 public abstract class IceCell {
 	protected int capacity;
-	protected boolean capacityKnown = false;
+	private boolean capacityKnown = false;
 	protected int snow;
 	protected static int maxSnow = 5;
 	private HashMap<Way, IceCell> neighbours = new HashMap<>();
 	protected ArrayList<Character> standingPlayers = new ArrayList<>();
 	protected IceField ownField;
+	protected Bear bear = null;
 
 	public int getSnow(){ return snow; } //CSAK TESZT
 	public int getCapacity(){ return capacity; } //CSAK TESZT
@@ -37,6 +38,7 @@ public abstract class IceCell {
 			return true;
 		}
 	}
+
 	public boolean loseSnow(boolean withShovel) {
 		if(snow != 0){
 			snow = (withShovel) ? snow - 2 : snow - 1;
@@ -45,10 +47,12 @@ public abstract class IceCell {
 		}
 		return false;
 	}
+
 	public void gainOneSnow() {
 		snow ++;
 		if(snow > maxSnow) snow = maxSnow;
 	}
+
 	public IceCell getNeighbour(Way w) {
 		return neighbours.get(w);
 	}
@@ -56,8 +60,16 @@ public abstract class IceCell {
 		neighbours.remove(w);
 		neighbours.put(w, ic);
 	}
+
 	public void removeCharacter(Character ch) { standingPlayers.remove(ch); }
 	public void addCharacter(Character ch) { standingPlayers.add(ch); }
+
+	public boolean acceptBear(Bear b){
+		return false;
+	}
+
+	public boolean hasBear(){ return bear != null; }
+	public void removeBear(){ bear = null; }
 
 	public boolean movePlayerOut(Way from) { return false;}
 	public void mine(Character actual) {}

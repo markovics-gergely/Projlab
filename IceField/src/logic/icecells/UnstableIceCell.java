@@ -2,6 +2,7 @@ package logic.icecells;
 
 import logic.IceField;
 import logic.Way;
+import logic.characters.Bear;
 import logic.characters.Character;
 
 public class UnstableIceCell extends IceCell  {
@@ -59,5 +60,13 @@ public class UnstableIceCell extends IceCell  {
 		}
 		wc.setBroken();
 		ownField.addIceCell(wc, this);
+		if(bear != null) ownField.gameLost();
+	}
+
+	public boolean acceptBear(Bear b){
+		bear = b;
+		b.setOwnCell(this);
+		if(!standingPlayers.isEmpty() && !hasIgloo) ownField.gameLost();
+		return true;
 	}
 }

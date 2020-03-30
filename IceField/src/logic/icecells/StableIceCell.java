@@ -1,22 +1,24 @@
 package logic.icecells;
 
 import logic.IceField;
+import logic.characters.Bear;
 import logic.characters.Character;
 import logic.items.Items;
 
 public class StableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
-	private boolean hasTent = false;
+	private int tentTurnsLeft = 0;
 	private Items item;
 
 	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
 
 	public StableIceCell(IceField icef, Items i){
-		super(icef.getMaxPlayer(), icef);
+		super(IceField.getMaxPlayer(), icef);
 		item = i;
 	}
 
 	private void removeItem() { item = null;}
+
 	public void mine(Character ch) {
 		if(snow == 0 && item != null){
 			if(item.equip(ch)){
@@ -25,6 +27,7 @@ public class StableIceCell extends IceCell  {
 			}
 		}
 	}
+
 	public boolean setIgloo(boolean b) {
 		if(hasIgloo == b) return false;
 		else {
@@ -32,28 +35,40 @@ public class StableIceCell extends IceCell  {
 			return true;
 		}
 	}
-	public boolean setTent(boolean b) {
-		if(hasTent == b) return false;
+
+	public boolean setTent() {
+		if(tentTurnsLeft == IceField.getMaxPlayer()) return false;
 		else {
-			hasTent = b;
+			tentTurnsLeft = IceField.getMaxPlayer();
 			return true;
 		}
 	}
+	public void resetTentTurnsLeft() { tentTurnsLeft = 0; }
 
-	public boolean safeToStart(){ return true; }
+	public boolean safeToStart(){ return bear == null; }
+
 	public void snowing() {
 		gainOneSnow();
-		if(!hasIgloo && !hasTent){
+		if(!hasIgloo && tentTurnsLeft == 0){
 			for(Character ch : standingPlayers){
 				ch.loseOneHeat();
 			}
 		}
-		if(hasIgloo && hasTent) setTent(false);
+		if(hasIgloo && tentTurnsLeft != 0) resetTentTurnsLeft();
 		else if(hasIgloo) setIgloo(false);
-		else if (hasTent) setTent(false);
+		else if (tentTurnsLeft != 0) resetTentTurnsLeft();
 	}
+
 	public void accept(Character ch) {
 		addCharacter(ch);
 		ch.setOwnCell(this);
+		if(bear != null) ownField.gameLost();
+	}
+
+	public boolean acceptBear(Bear b){
+		bear = b;
+		b.setOwnCell(this);
+		if(!standingPlayers.isEmpty() && !hasIgloo) ownField.gameLost();
+		return true;
 	}
 }

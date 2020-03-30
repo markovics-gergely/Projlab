@@ -7,10 +7,12 @@ public class FragileShovel implements Items {
     private int capacity = capacityMax;
 
     public void use(Character actualch) {
-        actualch.dig(true);
-        capacity--;
-        if(capacity == 0){
-            actualch.getBackPack().removeItem(PlayerActions.fragileshoveling);
+        if(actualch.dig(true)){
+            actualch.loseOneAction();
+            capacity--;
+            if(capacity == 0){
+                actualch.getBackPack().removeItem(PlayerActions.fragileshoveling);
+            }
         }
     }
     public boolean equip(Character ch) {

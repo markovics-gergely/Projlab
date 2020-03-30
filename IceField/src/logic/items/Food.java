@@ -5,7 +5,8 @@ import logic.characters.Character;
 public class Food implements Items {
 
 	public void use(Character actualch) {
-		actualch.gainOneHeat();
+		if(actualch.gainOneHeat())
+			actualch.loseOneAction();
 	}
 	public boolean equip(Character ch) { return ch.putItemtoBackPack(this, PlayerActions.eating);}
 }

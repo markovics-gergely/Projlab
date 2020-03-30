@@ -1,5 +1,6 @@
 package logic;
 
+import logic.characters.Bear;
 import logic.characters.Character;
 import logic.icecells.IceCell;
 import logic.icecells.StableIceCell;
@@ -21,6 +22,7 @@ public class IceField {
 	private ArrayList<Character> characters;
 	private WinChecker wc = new WinChecker();
     private int chosenToSave = -1;
+	private Bear bear;
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
@@ -45,8 +47,10 @@ public class IceField {
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(cellTable[j][i] + " ");
 			System.out.print("   ");
-			for (int i = 0; i < fieldLengths; i++)
-				System.out.print(field.get(j).get(i).getPlayers() + " "); //CSAK TESZT, KISZEDNI a getPlayers()-t az IceCellből.
+			for (int i = 0; i < fieldLengths; i++){
+				if(field.get(j).get(i).hasBear()) System.out.print("B ");
+				else System.out.print(field.get(j).get(i).getPlayers() + " "); //CSAK TESZT, KISZEDNI a getPlayers()-t az IceCellből.
+			}
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(field.get(j).get(i).getSnow() + " "); //CSAK TESZT, KISZEDNI a getSnow()-t az IceCellből.
@@ -74,6 +78,8 @@ public class IceField {
 		buildCells();
 	}
 
+	public static int getMaxPlayer(){ return maxPlayer; }
+
 	//Pálya építést szolgáló fv-ek
 	private void buildCells(){
 		for(int y = 0; y < fieldLengths; y++)  {
@@ -95,15 +101,31 @@ public class IceField {
 			default: configureCells(7, 14); break;
 		}
 	}
+
 	private void buildNeighbours(IceCell ic, int y, int x){
 		if(y != 0) ic.addNeighbour(Way.up, field.get(y - 1).get(x));
 		if(y != fieldLengths - 1) ic.addNeighbour(Way.down, field.get(y + 1).get(x));
 		if(x != 0) ic.addNeighbour(Way.left, field.get(y).get(x - 1));
 		if(x != fieldLengths - 1) ic.addNeighbour(Way.right, field.get(y).get(x + 1));
 	}
+
 	private void configureCells(int numberOfWater, int numberOfUnstable) {
 		//int[][] cellTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
 
+		putWaterToCell(numberOfWater, cellTable);
+
+		putUnstableToCell(numberOfUnstable, cellTable);
+
+		putItemsToCell(cellTable);
+
+		putBearToCell();
+
+		putPlayersToCell();
+
+		drawField(); //CSAK TESZT
+	} //VAN BENNE drawField();
+
+	private void putWaterToCell(int numberOfWater, int[][] cellTable){
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
@@ -137,9 +159,13 @@ public class IceField {
 						water.getNeighbour(w).addNeighbour(w.opposite(), water);
 				}
 			}
-
-			connected = 0;
 		}
+	}
+
+	private void putUnstableToCell(int numberOfUnstable, int[][] cellTable){
+		Random random = new Random();
+		int x = random.nextInt(fieldLengths);
+		int y = random.nextInt(fieldLengths);
 
 		for(int i = 0; i < numberOfUnstable; i++){
 			while(cellTable[y][x] != 0){
@@ -155,6 +181,12 @@ public class IceField {
 			}
 			cellTable[y][x] = 2;
 		}
+	}
+
+	private void putItemsToCell(int[][] cellTable){
+		Random random = new Random();
+		int x = random.nextInt(fieldLengths);
+		int y = random.nextInt(fieldLengths);
 
 		int essentialID = 0;
 		for (PlayerActions pa : PlayerActions.values()) {
@@ -170,16 +202,35 @@ public class IceField {
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
-		putPlayersToCell();
+	}
 
-		drawField(); //CSAK TESZT
-	} //VAN BENNE drawField();
-	private void putPlayersToCell() {
+	private void putBearToCell(){
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
 
-		while(!field.get(y).get(x).safeToStart()){
+		bear = new Bear(field.get(y).get(x), this);
+		while(!field.get(y).get(x).acceptBear(bear)){
+			x = random.nextInt(fieldLengths);
+			y = random.nextInt(fieldLengths);
+			bear = new Bear(field.get(y).get(x), this);
+		}
+	}
+
+	private void putPlayersToCell() {
+		int bearX = -1, bearY = -1;
+		for(int i = 0; i < fieldLengths; i++)
+			for(int j = 0; j < fieldLengths; j++)
+				if(field.get(j).get(i).hasBear()){
+					bearX = i; bearY = j;
+					break;
+				}
+
+		Random random = new Random();
+		int x = random.nextInt(fieldLengths);
+		int y = random.nextInt(fieldLengths);
+
+		while(!field.get(y).get(x).safeToStart() && Math.abs(bearX - x) < maxPlayer && Math.abs(bearY - y) < maxPlayer){
 			x = random.nextInt(fieldLengths);
 			y = random.nextInt(fieldLengths);
 		}
@@ -188,6 +239,7 @@ public class IceField {
 			characters.get(i).setOwnCell(field.get(y).get(x));
 		}
 	}
+
 	private void placeItem(PlayerActions pa, int y, int x, int essentialID){
 		Items item;
 		switch (pa){
@@ -195,7 +247,7 @@ public class IceField {
 			case shoveling: item = new Shovel(); break;
 			case wearingSuit: item = new Divingsuit(); break;
 			case savingWithRope: item = new Rope(); break;
-			case fragileshoveling:shoveling: item = new FragileShovel(); break;
+			case fragileshoveling: item = new FragileShovel(); break;
 			case useTent: item = new Tent(); break;
 			default: item = new EssentialItem(essentialID, wc); break;
 		}
@@ -207,12 +259,14 @@ public class IceField {
 		}
 		field.get(y).set(x, newCell);
 	}
+
 	private int checkIslands(int[][] confTable, int y, int x){
 		if(y < 0 || y > fieldLengths - 1 || x < 0 || x > fieldLengths - 1) return 0;
 		if(confTable[y][x] == 1 || confTable[y][x] >= 10) return 0;
 		confTable[y][x] += 10;
 		return 1 + checkIslands(confTable, y + 1, x) + checkIslands(confTable, y - 1, x) + checkIslands(confTable, y, x + 1) + checkIslands(confTable, y, x - 1);
 	}
+
 	private void resetIslands(int[][] confTable) {
 		for (int j = 0; j < fieldLengths; j++){
 			for (int i = 0; i < fieldLengths; i++){
@@ -246,6 +300,7 @@ public class IceField {
 			snow(seqNum - 1, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
 	}
+
 	public void addIceCell(IceCell ic, IceCell removed) {
 		for(int j = 0; j < fieldLengths; j++)
 			if(field.get(j).contains(removed)){
@@ -254,19 +309,21 @@ public class IceField {
 				field.get(j).add(i, ic);
 			}
 	}
-	private void gameLost() { gameLost = true; }
-	private void gameWon() { gameWon = true; }
+
+	public void gameLost() { gameLost = true; }
+	public void gameWon() { gameWon = true; }
+
 	private void actionHandler(){
 		if(characters.get(currentPlayer).getActionsLeft() == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
 			nextPlayer();
 		}
 	}
-	public static int getMaxPlayer(){ return maxPlayer; }
 
 	//Inputra reagáló fv-ek //VANNAK BENNE drawField() ek
 	public void setChosenToSave(int i){
 		if(i >= 0 && i < maxPlayer) chosenToSave = i;
 	}
+
 	public Character getChosenToSave(){
 		if(chosenToSave == -1) return null;
 		Character c = characters.get(chosenToSave);
@@ -274,12 +331,14 @@ public class IceField {
 
 		return c;
 	}
+
 	public void nextPlayer() {
 		characters.get(currentPlayer).resetActionsLeft();
+		bear.move();
 
 		Random r = new Random();
 		int i = r.nextInt(5);
-		//if (i == 0) snowStorm();
+		if (i == 0) snowStorm();
 
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)
@@ -294,15 +353,16 @@ public class IceField {
 					field.get(y).get(x).setTent(false);
 		}
 
-		int countAll = 0;
-		do {
+		int countAll;
+		for(countAll = 0; countAll != maxPlayer; countAll++){
 			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
-			countAll++;
-			if(countAll == maxPlayer){ gameLost(); break; }
-		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
+			if(characters.get(currentPlayer).getTurnsInWater() == 0) break;
+		}
+		if(countAll == maxPlayer) gameLost();
 
 		drawField();
 	}
+
 	private void useEssentialItems() {
 		IceCell ic = characters.get(0).getOwnCell();
 
@@ -324,9 +384,11 @@ public class IceField {
 
 		drawField(); //CSAK TESZT
 	}
+
 	public void setPlayerWay(Way w) {
 		characters.get(currentPlayer).setFacingWay(w);
 	}
+
 	public void usePlayerItem(PlayerActions pa) {
 		if(pa == PlayerActions.assemblingEssentials) useEssentialItems();
 		else characters.get(currentPlayer).useItem(pa);
@@ -335,12 +397,14 @@ public class IceField {
 
 		drawField(); //CSAK TESZT
 	}
+
 	public void useAbility() {
 		characters.get(currentPlayer).ability();
 		actionHandler();
 
 		drawField(); //CSAK TESZT
 	}
+
 	public void movePlayer(Way w) {
 		setPlayerWay(w);
 		characters.get(currentPlayer).move();

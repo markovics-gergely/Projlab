@@ -2,6 +2,7 @@ package logic.icecells;
 
 import logic.IceField;
 import logic.Way;
+import logic.characters.Bear;
 import logic.characters.Character;
 
 public class WaterCell extends IceCell {
@@ -14,6 +15,7 @@ public class WaterCell extends IceCell {
 	}
 
 	public void setBroken() { broken = true; }
+
 	public boolean movePlayerOut(Way from) {
 		Character chosen = ownField.getChosenToSave();
 		if(chosen != null && standingPlayers.contains(chosen)){
@@ -26,11 +28,14 @@ public class WaterCell extends IceCell {
 	}
 
 	public boolean safeToStart(){ return false; }
+
 	public void snowing() { if(!broken) gainOneSnow(); }
+
 	public void accept(Character ch) {
 		addCharacter(ch);
 		ch.addOneTurnInWater();
 		ch.setOwnCell(this);
 		setBroken();
 	}
+
 }

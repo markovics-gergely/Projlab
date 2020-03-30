@@ -5,7 +5,8 @@ import logic.characters.Character;
 public class Divingsuit implements Items {
 
 	public void use(Character actualch) {
-		actualch.wearDivingSuit();
+		if(actualch.wearDivingSuit())
+			actualch.loseOneAction();
 	}
 	public boolean equip(Character ch) { return ch.putItemtoBackPack(this, PlayerActions.wearingSuit); }
 
