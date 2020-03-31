@@ -11,7 +11,7 @@ public class StableIceCell extends IceCell  {
 	private Items item;
 
 	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
-	public int getTent(){ return tentTurnsLeft; } //CSAK TESZT
+	public int getTentTurnsLeft(){ return tentTurnsLeft; } //CSAK TESZT
 
 	public StableIceCell(IceField icef, Items i){
 		super(IceField.getMaxPlayer(), icef);
@@ -34,14 +34,14 @@ public class StableIceCell extends IceCell  {
 			return true;
 		}
 	}
-	public boolean setTent(boolean b) {
+	public boolean setUpTent() {
 		if(tentTurnsLeft == IceField.getMaxPlayer()) return false;
 		else {
-			if(b) tentTurnsLeft = IceField.getMaxPlayer();
-			if(!b) tentTurnsLeft--;
+			tentTurnsLeft = IceField.getMaxPlayer();
 			return true;
 		}
 	}
+	public void loseOneTentTurn(){ tentTurnsLeft--; }
 	public void resetTentTurnsLeft() { tentTurnsLeft = 0; }
 	public boolean safeToStart(){ return bear == null; }
 	public void snowing() {

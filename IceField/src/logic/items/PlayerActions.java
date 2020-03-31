@@ -7,5 +7,5 @@ public enum PlayerActions {
     eating,
     wearingSuit,
     assemblingEssentials,
-    useTent
+    setUpTent
 }

@@ -8,11 +8,9 @@ import java.util.Random;
 
 public class Bear {
     private IceCell ownCell;
-    private IceField ownField;
 
-    public Bear(IceCell ownc, IceField ownf){
+    public Bear(IceCell ownc){
         ownCell = ownc;
-        ownField = ownf;
     }
 
     public void move(){

@@ -8,9 +8,6 @@ import logic.characters.Character;
 public class WaterCell extends IceCell {
 	private boolean broken = false;
 
-	public int getIgloo(){ return 0; } //CSAK TESZT
-	public int getTent(){ return 0; } //CSAK TESZT
-
 	public WaterCell(IceField icef){
 		super(0, icef);
 	}
@@ -26,7 +23,7 @@ public class WaterCell extends IceCell {
 		}
 		return false;
 	}
-	public boolean safeToStart(){ return false; }
+
 	public void snowing() { if(!broken) gainOneSnow(); }
 	public void accept(Character ch) {
 		addCharacter(ch);

@@ -22,8 +22,7 @@ public abstract class IceCell {
 	public int getCapacity(){ return capacity; } //CSAK TESZT
 	public int getPlayers(){ return standingPlayers.size(); } //CSAK TESZT
 	public int getCapacityKnown(){ return capacityKnown ? 1 : 0; } //CSAK TESZT
-	public abstract int getIgloo(); //CSAK TESZT
-	public abstract int getTent(); //CSAK TESZT
+	public int getIgloo(){ return 0; } //CSAK TESZT
 
 	public IceCell(int c, IceField icef){
 		Random r = new Random();
@@ -67,11 +66,13 @@ public abstract class IceCell {
 	public boolean hasBear(){ return bear != null; }
 	public void removeBear(){ bear = null; }
 
+	public void loseOneTentTurn(){}
+	public int getTentTurnsLeft() { return 0; }
 	public boolean movePlayerOut(Way from) { return false;}
 	public void mine(Character actual) {}
 	public boolean setIgloo(boolean b) { return false;}
-	public boolean setTent(boolean b) { return false;}
-	public abstract boolean safeToStart();
+	public boolean setUpTent() { return false;}
+	public boolean safeToStart(){ return false; }
 	public abstract void accept(Character ch);
 	public abstract void snowing();
 }

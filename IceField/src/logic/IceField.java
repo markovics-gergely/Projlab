@@ -34,7 +34,7 @@ public class IceField {
 				"  Étel:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.eating) +
 				"  Plusz:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.assemblingEssentials) +
 				"  Törékeny ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.fragileshoveling) +
-				"  Sátor:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.useTent)
+				"  Sátor:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.setUpTent)
 		); //TÖRÖLNI A BACKPACK CLASSBÓL.
 		System.out.print("Típus 0:St 1:Víz"); System.out.println();
 		System.out.print("2:Inst 3:Item    ");
@@ -66,7 +66,7 @@ public class IceField {
 				System.out.print(field.get(j).get(i).getIgloo() + " "); //CSAK TESZT, KISZEDNI a getIgloo()-t az IceCellből és leszármazottaiból.
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
-				System.out.print(field.get(j).get(i).getTent() + " "); //CSAK TESZT, KISZEDNI a getTent()-t az IceCellből és leszármazottaiból.
+				System.out.print(field.get(j).get(i).getTentTurnsLeft() + " "); //CSAK TESZT, KISZEDNI a getTent()-t az IceCellből és leszármazottaiból.
 			System.out.println();
 		}
 		System.out.println();
@@ -205,11 +205,11 @@ public class IceField {
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
 
-		bear = new Bear(field.get(y).get(x), this);
+		bear = new Bear(field.get(y).get(x));
 		while(!field.get(y).get(x).acceptBear(bear)){
 			x = random.nextInt(fieldLengths);
 			y = random.nextInt(fieldLengths);
-			bear = new Bear(field.get(y).get(x), this);
+			bear = new Bear(field.get(y).get(x));
 		}
 	}
 	private void putPlayersToCell() {
@@ -225,7 +225,7 @@ public class IceField {
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
 
-		while(!field.get(y).get(x).safeToStart() && Math.abs(bearX - x) < maxPlayer && Math.abs(bearY - y) < maxPlayer){
+		while(!field.get(y).get(x).safeToStart() || (Math.abs(bearX - x) < maxPlayer && Math.abs(bearY - y) < maxPlayer)){
 			x = random.nextInt(fieldLengths);
 			y = random.nextInt(fieldLengths);
 		}
@@ -242,7 +242,7 @@ public class IceField {
 			case wearingSuit: item = new Divingsuit(); break;
 			case savingWithRope: item = new Rope(); break;
 			case fragileshoveling: item = new FragileShovel(); break;
-			case useTent: item = new Tent(); break;
+			case setUpTent: item = new Tent(); break;
 			default: item = new EssentialItem(essentialID, wc); break;
 		}
 		StableIceCell newCell = new StableIceCell(this, item);
@@ -337,8 +337,8 @@ public class IceField {
 
 		for (int y = 0; y < fieldLengths; y++) {
 			for (int x = 0; x < fieldLengths; x++) {
-				if (field.get(y).get(x).getTent() > 0) {
-					field.get(y).get(x).setTent(false);
+				if (field.get(y).get(x).getTentTurnsLeft() > 0) {
+					field.get(y).get(x).loseOneTentTurn();
 				}
 			}
 		}

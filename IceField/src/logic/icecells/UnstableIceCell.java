@@ -10,21 +10,22 @@ public class UnstableIceCell extends IceCell  {
 	private int tentTurnsLeft = 0;
 
 	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
-	public int getTent(){ return tentTurnsLeft; } //CSAK TESZT
+	public int getTentTurnsLeft(){ return tentTurnsLeft; } //CSAK TESZT
 
 	public UnstableIceCell(int c, IceField icef){
 		super(c, icef);
 	}
 
-	public boolean safeToStart(){ return false; }
-	public boolean setTent(boolean b) {
+
+	public void loseOneTentTurn(){ tentTurnsLeft--; }
+	public boolean setUpTent() {
 		if(tentTurnsLeft == IceField.getMaxPlayer()) return false;
 		else {
-			if(b) tentTurnsLeft = IceField.getMaxPlayer();
-			if(!b) tentTurnsLeft--;
+			tentTurnsLeft = IceField.getMaxPlayer();
 			return true;
 		}
 	}
+	public void resetTentTurnsLeft() { tentTurnsLeft = 0; }
 	public boolean setIgloo(boolean b) {
 		if(hasIgloo == b) return false;
 		else {
@@ -34,12 +35,14 @@ public class UnstableIceCell extends IceCell  {
 	}
 	public void snowing() {
 		gainOneSnow();
-		if(!hasIgloo){
+		if(!hasIgloo && tentTurnsLeft == 0){
 			for(Character ch : standingPlayers){
 				ch.loseOneHeat();
 			}
 		}
-		setIgloo(false);
+		if(hasIgloo && tentTurnsLeft != 0) resetTentTurnsLeft();
+		else if(hasIgloo) setIgloo(false);
+		else if (tentTurnsLeft != 0) resetTentTurnsLeft();
 	}
 	public void accept(Character ch) {
 		addCharacter(ch);

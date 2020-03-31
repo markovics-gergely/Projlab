@@ -3,8 +3,6 @@ package logic;
 import logic.characters.Eskimo;
 import logic.characters.Explorer;
 import logic.characters.Character;
-import logic.icecells.IceCell;
-import logic.icecells.StableIceCell;
 import logic.items.PlayerActions;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,10 +11,6 @@ import java.util.Scanner;
 //IceField  -> nextPlayer() -> //if (i == 0) snowStorm();
 //IceCell   -> Konstruktor  -> snow = /*r.nextInt(maxSnow + 1)*//*0;
 
-//Hibák:
-//Valamiért vízre is spawnolhatnak
-//A medve túl közel spawnol az emberekhez
-//A sátor nem jó
 public class Main {
     public static void main(String[] args) {
         ArrayList<Character> ch = new ArrayList<>();
@@ -40,7 +34,7 @@ public class Main {
             case "eat" : field.usePlayerItem(PlayerActions.eating); break; //Munka
             case "dig": field.usePlayerItem(PlayerActions.shoveling); break; //Munka
             case "dig2": field.usePlayerItem(PlayerActions.fragileshoveling); break; //Munka
-            case "usetent": field.usePlayerItem(PlayerActions.useTent); break; //Munka
+            case "setuptent": field.usePlayerItem(PlayerActions.setUpTent); break; //Munka
             case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break; //Munka
             case "save" : field.setChosenToSave(selectPlayer()); field.usePlayerItem(PlayerActions.savingWithRope); break; //Munka
             case "assemble" : field.usePlayerItem(PlayerActions.assemblingEssentials); break; //Munka
@@ -61,7 +55,6 @@ public class Main {
     public static int selectPlayer(){
         System.out.println("Kit akarsz kimenteni?");
         Scanner saveScan = new Scanner(System.in);
-        int c = saveScan.nextInt();
-        return c;
+        return saveScan.nextInt();
     }
 }

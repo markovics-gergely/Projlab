@@ -5,11 +5,11 @@ import logic.characters.Character;
 public class Tent implements Items {
 
     public void use(Character actualch) {
-        if(actualch.getOwnCell().setTent(true)){
+        if(actualch.getOwnCell().setUpTent()){
             actualch.loseOneAction();
         }
     }
     public boolean equip(Character ch) {
-        return ch.putItemtoBackPack(this, PlayerActions.useTent);
+        return ch.putItemtoBackPack(this, PlayerActions.setUpTent);
     }
 }
