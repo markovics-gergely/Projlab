@@ -23,6 +23,7 @@ public abstract class IceCell {
 	public int getPlayers(){ return standingPlayers.size(); } //CSAK TESZT
 	public int getCapacityKnown(){ return capacityKnown ? 1 : 0; } //CSAK TESZT
 	public abstract int getIgloo(); //CSAK TESZT
+	public abstract int getTent(); //CSAK TESZT
 
 	public IceCell(int c, IceField icef){
 		Random r = new Random();
@@ -38,7 +39,6 @@ public abstract class IceCell {
 			return true;
 		}
 	}
-
 	public boolean loseSnow(boolean withShovel) {
 		if(snow != 0){
 			snow = (withShovel) ? snow - 2 : snow - 1;
@@ -47,12 +47,10 @@ public abstract class IceCell {
 		}
 		return false;
 	}
-
 	public void gainOneSnow() {
 		snow ++;
 		if(snow > maxSnow) snow = maxSnow;
 	}
-
 	public IceCell getNeighbour(Way w) {
 		return neighbours.get(w);
 	}
@@ -60,14 +58,12 @@ public abstract class IceCell {
 		neighbours.remove(w);
 		neighbours.put(w, ic);
 	}
-
 	public void removeCharacter(Character ch) { standingPlayers.remove(ch); }
 	public void addCharacter(Character ch) { standingPlayers.add(ch); }
 
 	public boolean acceptBear(Bear b){
 		return false;
 	}
-
 	public boolean hasBear(){ return bear != null; }
 	public void removeBear(){ bear = null; }
 

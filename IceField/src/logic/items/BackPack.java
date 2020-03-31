@@ -37,5 +37,6 @@ public class BackPack {
 	public void removeItem(PlayerActions pa){
 		obtainedItems.remove(pa);
 	}
+
 	public int getNumber(PlayerActions pa){ return obtainedItems.containsKey(pa) ? obtainedItems.get(pa).size() : 0; } //CSAK TESZT
 }

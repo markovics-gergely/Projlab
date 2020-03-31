@@ -11,6 +11,7 @@ public class StableIceCell extends IceCell  {
 	private Items item;
 
 	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
+	public int getTent(){ return tentTurnsLeft; } //CSAK TESZT
 
 	public StableIceCell(IceField icef, Items i){
 		super(IceField.getMaxPlayer(), icef);
@@ -18,7 +19,6 @@ public class StableIceCell extends IceCell  {
 	}
 
 	private void removeItem() { item = null;}
-
 	public void mine(Character ch) {
 		if(snow == 0 && item != null){
 			if(item.equip(ch)){
@@ -27,7 +27,6 @@ public class StableIceCell extends IceCell  {
 			}
 		}
 	}
-
 	public boolean setIgloo(boolean b) {
 		if(hasIgloo == b) return false;
 		else {
@@ -35,18 +34,16 @@ public class StableIceCell extends IceCell  {
 			return true;
 		}
 	}
-
-	public boolean setTent() {
+	public boolean setTent(boolean b) {
 		if(tentTurnsLeft == IceField.getMaxPlayer()) return false;
 		else {
-			tentTurnsLeft = IceField.getMaxPlayer();
+			if(b) tentTurnsLeft = IceField.getMaxPlayer();
+			if(!b) tentTurnsLeft--;
 			return true;
 		}
 	}
 	public void resetTentTurnsLeft() { tentTurnsLeft = 0; }
-
 	public boolean safeToStart(){ return bear == null; }
-
 	public void snowing() {
 		gainOneSnow();
 		if(!hasIgloo && tentTurnsLeft == 0){
@@ -58,13 +55,11 @@ public class StableIceCell extends IceCell  {
 		else if(hasIgloo) setIgloo(false);
 		else if (tentTurnsLeft != 0) resetTentTurnsLeft();
 	}
-
 	public void accept(Character ch) {
 		addCharacter(ch);
 		ch.setOwnCell(this);
 		if(bear != null) ownField.gameLost();
 	}
-
 	public boolean acceptBear(Bear b){
 		bear = b;
 		b.setOwnCell(this);

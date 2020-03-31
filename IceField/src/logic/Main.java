@@ -12,6 +12,11 @@ import java.util.Scanner;
 //Character -> adattag      -> private static int maxActions = 100;
 //IceField  -> nextPlayer() -> //if (i == 0) snowStorm();
 //IceCell   -> Konstruktor  -> snow = /*r.nextInt(maxSnow + 1)*//*0;
+
+//Hibák:
+//Valamiért vízre is spawnolhatnak
+//A medve túl közel spawnol az emberekhez
+//A sátor nem jó
 public class Main {
     public static void main(String[] args) {
         ArrayList<Character> ch = new ArrayList<>();
@@ -33,7 +38,9 @@ public class Main {
     public static void action(String ac, IceField field){
         switch(ac){
             case "eat" : field.usePlayerItem(PlayerActions.eating); break; //Munka
-            case "dig": field.usePlayerItem(PlayerActions.shoveling); break; //munka
+            case "dig": field.usePlayerItem(PlayerActions.shoveling); break; //Munka
+            case "dig2": field.usePlayerItem(PlayerActions.fragileshoveling); break; //Munka
+            case "usetent": field.usePlayerItem(PlayerActions.useTent); break; //Munka
             case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break; //Munka
             case "save" : field.setChosenToSave(selectPlayer()); field.usePlayerItem(PlayerActions.savingWithRope); break; //Munka
             case "assemble" : field.usePlayerItem(PlayerActions.assemblingEssentials); break; //Munka

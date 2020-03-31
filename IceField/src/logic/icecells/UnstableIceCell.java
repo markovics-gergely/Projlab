@@ -7,9 +7,10 @@ import logic.characters.Character;
 
 public class UnstableIceCell extends IceCell  {
 	private boolean hasIgloo = false;
-	private boolean hasTent = false;
+	private int tentTurnsLeft = 0;
 
 	public int getIgloo(){ return hasIgloo ? 1 : 0; } //CSAK TESZT
+	public int getTent(){ return tentTurnsLeft; } //CSAK TESZT
 
 	public UnstableIceCell(int c, IceField icef){
 		super(c, icef);
@@ -17,9 +18,10 @@ public class UnstableIceCell extends IceCell  {
 
 	public boolean safeToStart(){ return false; }
 	public boolean setTent(boolean b) {
-		if(hasTent == b) return false;
+		if(tentTurnsLeft == IceField.getMaxPlayer()) return false;
 		else {
-			hasTent = b;
+			if(b) tentTurnsLeft = IceField.getMaxPlayer();
+			if(!b) tentTurnsLeft--;
 			return true;
 		}
 	}
@@ -62,7 +64,6 @@ public class UnstableIceCell extends IceCell  {
 		ownField.addIceCell(wc, this);
 		if(bear != null) ownField.gameLost();
 	}
-
 	public boolean acceptBear(Bear b){
 		bear = b;
 		b.setOwnCell(this);

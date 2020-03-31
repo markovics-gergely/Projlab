@@ -9,10 +9,10 @@ public class FragileShovel implements Items {
     public void use(Character actualch) {
         if(actualch.dig(true)){
             actualch.loseOneAction();
-            capacity--;
-            if(capacity == 0){
-                actualch.getBackPack().removeItem(PlayerActions.fragileshoveling);
-            }
+        }
+        capacity--;
+        if(capacity == 0){
+            actualch.getBackPack().removeItem(PlayerActions.fragileshoveling);
         }
     }
     public boolean equip(Character ch) {
