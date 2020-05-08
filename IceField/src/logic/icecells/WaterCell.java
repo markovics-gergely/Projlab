@@ -12,7 +12,7 @@ public class WaterCell extends IceCell {
 		super(0, icef);
 	}
 
-	public void setBroken() { broken = true; }
+	public void setBroken() { broken = true; snow = 0; }
 	public boolean movePlayerOut(Way from) {
 		Character chosen = ownField.getChosenToSave();
 		if(chosen != null && standingPlayers.contains(chosen)){
