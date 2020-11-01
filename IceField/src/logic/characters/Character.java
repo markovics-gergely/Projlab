@@ -6,6 +6,8 @@ import logic.items.PlayerActions;
 import logic.Way;
 import logic.items.BackPack;
 
+import static logic.Way.up;
+
 public abstract class Character {
 	private int maxBodyHeat;
 	private int bodyHeat;
@@ -13,14 +15,15 @@ public abstract class Character {
 	private boolean wearingDivingSuit = false;
 	private Way facingWay = Way.up;
 	private IceCell ownCell;
-	private BackPack backpack = new BackPack();
-	private static int maxActions = 100;
+	private BackPack backpack;
+	private static int maxActions = 4;
 	private int actionsLeft;
 
 	Character(int mb, IceCell ic){
 		maxBodyHeat = mb;
-		ownCell = ic;
 		bodyHeat = maxBodyHeat;
+		ownCell = ic;
+		backpack = new BackPack();
 		actionsLeft = maxActions;
 	}
 
@@ -32,32 +35,30 @@ public abstract class Character {
 			loseOneAction();
 		}
 	}
-	public boolean dig(boolean withShovel) {
-		return ownCell.loseSnow(withShovel);
+	public void dig(boolean withShovel) {
+		if(ownCell.loseSnow(withShovel)) loseOneAction();
 	}
 	public void mine() { ownCell.mine(this); }
-	public boolean gainOneHeat() {
+	public void gainOneHeat() {
 		if(bodyHeat != maxBodyHeat){
 			bodyHeat++;
-			return true;
+			loseOneAction();
 		}
-		return false;
 	}
 	public void loseOneHeat() {
 		if(bodyHeat != 0) bodyHeat--;
 	}
-	public void setOwnCell(IceCell ic) { ownCell = ic; }
-	public IceCell getOwnCell() { return ownCell; }
-	public void addOneTurnInWater() { turnsInWater++; }
-	public int getTurnsInWater() { return turnsInWater; }
-	public void resetTurnsInWater() { turnsInWater = 0; }
+	public void setOwnCell(IceCell ic) { ownCell = ic;}
+	public IceCell getOwnCell() { return ownCell;}
+	public void addOneTurnInWater() { turnsInWater++;}
+	public int getTurnsInWater() { return turnsInWater;}
+	public void resetTurnsInWater() { turnsInWater = 0;}
 	public boolean putItemtoBackPack(Items it, PlayerActions pa) { return backpack.addItem(it, pa); }
-	public boolean wearDivingSuit() {
+	public void wearDivingSuit() {
 		if(!wearingDivingSuit){
 			wearingDivingSuit = true;
-			return true;
+			loseOneAction();
 		}
-		return false;
 	}
 	public boolean getDivingSuit() { return wearingDivingSuit;}
 	public void setFacingWay(Way w) { facingWay = w;}
@@ -71,10 +72,8 @@ public abstract class Character {
 		if(item != null){
 			item.use(this);
 		}
-		else if(pa == PlayerActions.shoveling || pa == PlayerActions.fragileshoveling) {
+		else if(pa == PlayerActions.shoveling)
 			dig(false);
-			loseOneAction();
-		}
 	}
 	public void useEssentials() {
 		Items ei = backpack.hasItem(PlayerActions.assemblingEssentials);

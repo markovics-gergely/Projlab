@@ -1,6 +1,5 @@
 package logic;
 
-import logic.characters.Bear;
 import logic.characters.Character;
 import logic.icecells.IceCell;
 import logic.icecells.StableIceCell;
@@ -22,7 +21,6 @@ public class IceField {
 	private ArrayList<Character> characters;
 	private WinChecker wc = new WinChecker();
     private int chosenToSave = -1;
-	private Bear bear;
 
 	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
 	private void drawField(){
@@ -32,9 +30,7 @@ public class IceField {
 				"  Kötél:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.savingWithRope) +
 				"  Ruha:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.wearingSuit) +
 				"  Étel:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.eating) +
-				"  Plusz:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.assemblingEssentials) +
-				"  Törékeny ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.fragileshoveling) +
-				"  Sátor:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.setUpTent)
+				"  Plusz:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.assemblingEssentials)
 		); //TÖRÖLNI A BACKPACK CLASSBÓL.
 		System.out.print("Típus 0:St 1:Víz"); System.out.println();
 		System.out.print("2:Inst 3:Item    ");
@@ -42,16 +38,13 @@ public class IceField {
 		System.out.print("Hóréteg          ");
 		System.out.print("Kapacitás        ");
 		System.out.print("Kap. Known       ");
-		System.out.print("Iglu             ");
-		System.out.print("Sátor            "); System.out.println();
+		System.out.print("Iglu             "); System.out.println();
 		for (int j = 0; j < fieldLengths; j++) {
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(cellTable[j][i] + " ");
 			System.out.print("   ");
-			for (int i = 0; i < fieldLengths; i++){
-				if(field.get(j).get(i).hasBear()) System.out.print("B ");
-				else System.out.print(field.get(j).get(i).getPlayers() + " "); //CSAK TESZT, KISZEDNI a getPlayers()-t az IceCellből.
-			}
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getPlayers() + " "); //CSAK TESZT, KISZEDNI a getPlayers()-t az IceCellből.
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(field.get(j).get(i).getSnow() + " "); //CSAK TESZT, KISZEDNI a getSnow()-t az IceCellből.
@@ -64,9 +57,6 @@ public class IceField {
 			System.out.print("   ");
 			for (int i = 0; i < fieldLengths; i++)
 				System.out.print(field.get(j).get(i).getIgloo() + " "); //CSAK TESZT, KISZEDNI a getIgloo()-t az IceCellből és leszármazottaiból.
-			System.out.print("   ");
-			for (int i = 0; i < fieldLengths; i++)
-				System.out.print(field.get(j).get(i).getTentTurnsLeft() + " "); //CSAK TESZT, KISZEDNI a getTent()-t az IceCellből és leszármazottaiból.
 			System.out.println();
 		}
 		System.out.println();
@@ -112,19 +102,6 @@ public class IceField {
 	private void configureCells(int numberOfWater, int numberOfUnstable) {
 		//int[][] cellTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
 
-		putWaterToCell(numberOfWater, cellTable);
-
-		putUnstableToCell(numberOfUnstable, cellTable);
-
-		putItemsToCell(cellTable);
-
-		putBearToCell();
-
-		putPlayersToCell();
-
-		drawField(); //CSAK TESZT
-	} //VAN BENNE drawField();
-	private void putWaterToCell(int numberOfWater, int[][] cellTable){
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
@@ -158,12 +135,9 @@ public class IceField {
 						water.getNeighbour(w).addNeighbour(w.opposite(), water);
 				}
 			}
+
+			connected = 0;
 		}
-	}
-	private void putUnstableToCell(int numberOfUnstable, int[][] cellTable){
-		Random random = new Random();
-		int x = random.nextInt(fieldLengths);
-		int y = random.nextInt(fieldLengths);
 
 		for(int i = 0; i < numberOfUnstable; i++){
 			while(cellTable[y][x] != 0){
@@ -179,11 +153,6 @@ public class IceField {
 			}
 			cellTable[y][x] = 2;
 		}
-	}
-	private void putItemsToCell(int[][] cellTable){
-		Random random = new Random();
-		int x = random.nextInt(fieldLengths);
-		int y = random.nextInt(fieldLengths);
 
 		int essentialID = 0;
 		for (PlayerActions pa : PlayerActions.values()) {
@@ -199,33 +168,16 @@ public class IceField {
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
-	}
-	private void putBearToCell(){
-		Random random = new Random();
-		int x = random.nextInt(fieldLengths);
-		int y = random.nextInt(fieldLengths);
+		putPlayersToCell();
 
-		bear = new Bear(field.get(y).get(x));
-		while(!field.get(y).get(x).acceptBear(bear)){
-			x = random.nextInt(fieldLengths);
-			y = random.nextInt(fieldLengths);
-			bear = new Bear(field.get(y).get(x));
-		}
-	}
+		drawField(); //CSAK TESZT
+	} //VAN BENNE drawField();
 	private void putPlayersToCell() {
-		int bearX = -1, bearY = -1;
-		for(int i = 0; i < fieldLengths; i++)
-			for(int j = 0; j < fieldLengths; j++)
-				if(field.get(j).get(i).hasBear()){
-					bearX = i; bearY = j;
-					break;
-				}
-
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
 
-		while(!field.get(y).get(x).safeToStart() || (Math.abs(bearX - x) < maxPlayer && Math.abs(bearY - y) < maxPlayer)){
+		while(!field.get(y).get(x).safeToStart()){
 			x = random.nextInt(fieldLengths);
 			y = random.nextInt(fieldLengths);
 		}
@@ -241,8 +193,6 @@ public class IceField {
 			case shoveling: item = new Shovel(); break;
 			case wearingSuit: item = new Divingsuit(); break;
 			case savingWithRope: item = new Rope(); break;
-			case fragileshoveling: item = new FragileShovel(); break;
-			case setUpTent: item = new Tent(); break;
 			default: item = new EssentialItem(essentialID, wc); break;
 		}
 		StableIceCell newCell = new StableIceCell(this, item);
@@ -273,7 +223,6 @@ public class IceField {
 		int x = r.nextInt(fieldLengths);
 		int y = r.nextInt(fieldLengths);
 		IceCell rootCell = field.get(y).get(x);
-		//Javítani randomra
 		int radius = (int)(Math.ceil(((double)fieldLengths)/2));
 
 		rootCell.snowing();
@@ -301,8 +250,8 @@ public class IceField {
 				field.get(j).add(i, ic);
 			}
 	}
-	public void gameLost() { gameLost = true; }
-	public void gameWon() { gameWon = true; }
+	private void gameLost() { gameLost = true; }
+	private void gameWon() { gameWon = true; }
 	private void actionHandler(){
 		if(characters.get(currentPlayer).getActionsLeft() == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
 			nextPlayer();
@@ -323,10 +272,9 @@ public class IceField {
 	}
 	public void nextPlayer() {
 		characters.get(currentPlayer).resetActionsLeft();
-		bear.move();
 
 		Random r = new Random();
-		int i = r.nextInt(5);
+		int i = r.nextInt(4);
 		//if (i == 0) snowStorm();
 
 		for(Character c : characters){
@@ -335,21 +283,13 @@ public class IceField {
 			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
 				gameLost();
 		}
-
-		for (int y = 0; y < fieldLengths; y++) {
-			for (int x = 0; x < fieldLengths; x++) {
-				if (field.get(y).get(x).getTentTurnsLeft() > 0) {
-					field.get(y).get(x).loseOneTentTurn();
-				}
-			}
-		}
-
-		int countAll;
-		for(countAll = 0; countAll != maxPlayer; countAll++){
+		//Ezt nem fix hogy jó, de az unstable miatt került bele, nem lépett ki unstablenél.
+		int countAll = 0;
+		do {
 			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
-			if(characters.get(currentPlayer).getTurnsInWater() == 0) break;
-		}
-		if(countAll == maxPlayer) gameLost();
+			countAll++;
+			if(countAll == maxPlayer){ gameLost(); break; }
+		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
 
 		drawField();
 	}
@@ -404,5 +344,4 @@ public class IceField {
 
 		drawField(); //CSAK TESZT
 	}
-
 }

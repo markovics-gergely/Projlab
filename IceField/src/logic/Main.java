@@ -3,14 +3,20 @@ package logic;
 import logic.characters.Eskimo;
 import logic.characters.Explorer;
 import logic.characters.Character;
+import logic.icecells.IceCell;
+import logic.icecells.StableIceCell;
 import logic.items.PlayerActions;
 import java.util.ArrayList;
 import java.util.Scanner;
+//Hibák:
+//Rope rossz kiválasztás(Ropeban kommentelve, elv megcsinálva)
+//Csökken az food amikor max a hp(Elv useItem ben javítva)
+//Nem resetelődött passnál a kör (Elv megcsinálva)
+
 //Teszt:
 //Character -> adattag      -> private static int maxActions = 100;
 //IceField  -> nextPlayer() -> //if (i == 0) snowStorm();
 //IceCell   -> Konstruktor  -> snow = /*r.nextInt(maxSnow + 1)*//*0;
-
 public class Main {
     public static void main(String[] args) {
         ArrayList<Character> ch = new ArrayList<>();
@@ -32,9 +38,7 @@ public class Main {
     public static void action(String ac, IceField field){
         switch(ac){
             case "eat" : field.usePlayerItem(PlayerActions.eating); break; //Munka
-            case "dig": field.usePlayerItem(PlayerActions.shoveling); break; //Munka
-            case "dig2": field.usePlayerItem(PlayerActions.fragileshoveling); break; //Munka
-            case "setuptent": field.usePlayerItem(PlayerActions.setUpTent); break; //Munka
+            case "dig": field.usePlayerItem(PlayerActions.shoveling); break; //munka
             case "wearsuit": field.usePlayerItem(PlayerActions.wearingSuit); break; //Munka
             case "save" : field.setChosenToSave(selectPlayer()); field.usePlayerItem(PlayerActions.savingWithRope); break; //Munka
             case "assemble" : field.usePlayerItem(PlayerActions.assemblingEssentials); break; //Munka
@@ -55,6 +59,7 @@ public class Main {
     public static int selectPlayer(){
         System.out.println("Kit akarsz kimenteni?");
         Scanner saveScan = new Scanner(System.in);
-        return saveScan.nextInt();
+        int c = saveScan.nextInt();
+        return c;
     }
 }

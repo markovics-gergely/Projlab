@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/IceField.iml" filepath="$PROJECT_DIR$/IceField.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IceFieldJFX.iml" filepath="$PROJECT_DIR$/IceFieldJFX.iml" />
     </modules>
   </component>
 </project>
