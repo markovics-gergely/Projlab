@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="IceFieldJFX:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar</output-path>
+    <root id="archive" name="IceFieldJFX.jar">
+      <element id="module-output" name="IceFieldJFX" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx.web.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx.media.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx.graphics.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx.controls.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/javafx-swt.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$PROJECT_DIR$/out/artifacts/IceFieldJFX_jar/JavaFX/bin" />
+    </root>
+  </artifact>
+</component>
