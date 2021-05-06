@@ -21,48 +21,119 @@ import logic.items.PlayerActions;
 
 import java.util.ArrayList;
 
+/**
+ *  Ez az osztály felel a játék tényleges kinézetéért,
+ *  itt fogja tudni az aktuális játékos irányítani a játékot.
+ */
 public class GameBoard implements ControlledScreen {
+    /**
+     * Az ásó használatához tartozó gomb.
+     */
     @FXML
     private Button shovel = new Button();
+    /**
+     * A törékeny ásó használatához tartozó gomb.
+     */
     @FXML
     private Button fragileshovel = new Button();
+    /**
+     * Tárgy kibányászásához tartozó gomb.
+     */
     @FXML
     private Button pickaxe = new Button();
+    /**
+     * A kötél használatához tartozó gomb.
+     */
     @FXML
     private Button rope = new Button();
+    /**
+     * Az élelem használatához tartozó gomb.
+     */
     @FXML
     private Button food = new Button();
+    /**
+     * A búvárruha használatához tartozó gomb.
+     */
     @FXML
     private Button divingsuit = new Button();
+    /**
+     * A sátor használatához tartozó gomb.
+     */
     @FXML
     private Button tent = new Button();
+    /**
+     * Az összeszerelés megkezdéséhez tartozó gomb.
+     */
     @FXML
     private Button essentials = new Button();
+    /**
+     * A felfele irány reprezentálásához tartozó gomb. Ezt használjuk mozgásnál,
+     * vagy amikor képesség használat miatt egy szomszédos cellát kell kiválasztani.
+     */
     @FXML
     private Button up = new Button();
+    /**
+     * A jobbra irány reprezentálásához tartozó gomb. Ezt használjuk mozgásnál,
+     * vagy amikor képesség használat miatt egy szomszédos cellát kell kiválasztani.
+     */
     @FXML
     private Button right = new Button();
+    /**
+     * A balra irány reprezentálásához tartozó gomb. Ezt használjuk mozgásnál,
+     * vagy amikor képesség használat miatt egy szomszédos cellát kell kiválasztani.
+     */
     @FXML
     private Button left = new Button();
+    /**
+     * A lefele irány reprezentálásához tartozó gomb. Ezt használjuk mozgásnál,
+     * vagy amikor képesség használat miatt egy szomszédos cellát kell kiválasztani.
+     */
     @FXML
     private Button down = new Button();
+    /**
+     * A soron lévő játékos passzolásához tartozó gomb.
+     */
     @FXML
     private Button pass = new Button();
+    /**
+     * A karakter képességének használatához tartozó gomb.
+     */
     @FXML
     private Button ability = new Button();
+    /**
+     * A menübe való kilépéshez tartozó gomb.
+     */
     @FXML
     private Button menu = new Button();
+    /**
+     * A játékban szereplő karaktereket jeleníti meg a képernyőn.
+     */
     @FXML
     private GridPane characters = new GridPane();
+    /**
+     * Az aktuális játékos karakterét jeleníti meg a képernyőn.
+     */
     @FXML
     private GridPane actualPlayer = new GridPane();
+    /**
+     * Egy panel, amire elhelyezzük a grafikus elemeket.
+     */
     @FXML
     private AnchorPane gameboard = new AnchorPane();
+    /**
+     * Kiírja, hogy a karakternek hány egységnyi munkája van még.
+     */
     @FXML
     private Label actionLabel = new Label();
+    /**
+     * Kiírja, hogy a karakternek mennyi testhője van még.
+     */
     @FXML
     private Label bodyHeatLabel = new Label();
 
+    /**
+     * A játékhoz szükséges képek.
+     */
     private Image chSmallImage = new Image("charactersSmall.png");
     private Image chMediumImage = new Image("charactersMedium.png");
     private Image chMaxImage = new Image("charactersMax.png");
@@ -73,18 +144,44 @@ public class GameBoard implements ControlledScreen {
     private Image numbersImage = new Image("numbers.png");
     private Image lidImage = new Image("lid.png");
     private Image controlImage = new Image("control.png");
+
+    /**
+     * A játéktér kirajzolása.
+     */
     private GridPane field;
+    /**
+     * Cellához tartozó megjelenítők csoportja.
+     */
     private GridPane cellCharacter, cellCapacity, cellLid, cellBear;
 
+    /**
+     * A saját screenjét tárolja.
+     */
     private ScreenController actualScreen;
+    /**
+     * A logikához tartozó főosztály
+     */
     private IceField iceField;
+    /**
+     * A karaketerek eltolását tárolja
+     */
     private ArrayList<Integer> charactersShift = new ArrayList<>();
+    /**
+     * IsAbility jelzi, hogy előtte megnyomták-e az ability gombot, az isSaving
+     * pedig jelzi, hogy éppen a kötéllel mentéshez akarunk-e játékost választani.
+     */
     private boolean isAbility = false, isSaving = false;
 
+    /**
+     * Visszalépés a menübe.
+     */
     @FXML
     private void menuAction(){
         setNextField();
     }
+    /**
+     * Ásó használata.
+     */
     @FXML
     private void shovelAction(){
         isAbility = false; isSaving = false;
@@ -92,6 +189,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Törékeny ásó használata.
+     */
     @FXML
     private void fragileshovelAction(){
         isAbility = false; isSaving = false;
@@ -99,6 +199,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Étel használata.
+     */
     @FXML
     private void foodAction(){
         isAbility = false; isSaving = false;
@@ -106,6 +209,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Búvárruha használata.
+     */
     @FXML
     private void divingsuitAction(){
         isAbility = false; isSaving = false;
@@ -113,6 +219,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Csákány használata.
+     */
     @FXML
     private void pickaxeAction(){
         isAbility = false; isSaving = false;
@@ -120,11 +229,17 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Kötél használata.
+     */
     @FXML
     private void ropeAction(){
         isAbility = false;
         isSaving = true;
     }
+    /**
+     * Sátor használata.
+     */
     @FXML
     private void tentAction(){
         isAbility = false; isSaving = false;
@@ -132,6 +247,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Összeszerelés kezdeményezése.
+     */
     @FXML
     private void essentialsAction(){
         isAbility = false; isSaving = false;
@@ -139,6 +257,10 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+
+    /**
+     * Felfele lépés/Képesség irányának meghatározása.
+     */
     @FXML
     private void upAction(){
         if(isAbility) {
@@ -152,6 +274,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Balra lépés/Képesség irányának meghatározása.
+     */
     @FXML
     private void leftAction(){
         if(isAbility) {
@@ -165,6 +290,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Lefele lépés/Képesség irányának meghatározása.
+     */
     @FXML
     private void downAction(){
         if(isAbility) {
@@ -178,6 +306,10 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+
+    /**
+     * Jobbra lépés/Képesség irányának meghatározása.
+     */
     @FXML
     private void rightAction(){
         if(isAbility) {
@@ -191,6 +323,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Aktuális karakter körének passzolása.
+     */
     @FXML
     private void passAction(){
         isAbility = false; isSaving = false;
@@ -198,6 +333,9 @@ public class GameBoard implements ControlledScreen {
 
         refreshGame();
     }
+    /**
+     * Képesség használata.
+     */
     @FXML
     private void abilityAction(){
         if(charactersShift.get(iceField.getActualPlayerNumber()) == iceField.getActualPlayerNumber()*18*2+18)
@@ -209,6 +347,10 @@ public class GameBoard implements ControlledScreen {
 
         isSaving = false;
     }
+    /**
+     * Karakter kiválasztása.
+     * @param mouseEvent Esetlegesen bekövetkező kattintás paraméterei.
+     */
     @FXML
     private void charactersAction(MouseEvent mouseEvent){
         if(isSaving) {
@@ -228,6 +370,9 @@ public class GameBoard implements ControlledScreen {
         isSaving = false;
     }
 
+    /**
+     * Felület újrarajzolása.
+     */
     private void refreshGame(){
         gameChecker();
         buildActualPlayer();
@@ -235,6 +380,9 @@ public class GameBoard implements ControlledScreen {
         buildCharacters();
         buildField();
     }
+    /**
+     * Megnézi, hogy vége van-e a játéknak.
+     */
     public void gameChecker(){
         if(iceField.gameLost){
             setNextField();
@@ -244,6 +392,12 @@ public class GameBoard implements ControlledScreen {
         }
     }
 
+    /**
+     * Tárgy képeeinek beállítása
+     * @param itemType Tárgy típusa
+     * @param actualButton Gomb amire rá kell rakni a képet.
+     * @param x Eltolás mértéke.
+     */
     public void setItemsImage(Image itemType, Button actualButton, int x){
         ImageView iv = new ImageView();
         iv.setViewport(new Rectangle2D(84*x,0,84,84));
@@ -251,6 +405,12 @@ public class GameBoard implements ControlledScreen {
         actualButton.setGraphic(iv);
         actualButton.setBackground(Background.EMPTY);
     }
+
+    /**
+     * Irányító felület képeinek beállítása.
+     * @param actualButton Gomb amire rá kell rakni a képet.
+     * @param x Eltolás mértéke.
+     */
     public void setControlPanelImage(Button actualButton, int x){
         ImageView iv = new ImageView();
         iv.setViewport(new Rectangle2D(144*x, 0, 144, 144));
@@ -258,6 +418,14 @@ public class GameBoard implements ControlledScreen {
         actualButton.setGraphic(iv);
         actualButton.setBackground(Background.EMPTY);
     }
+
+    /**
+     * Karakter képeinek beaállítása.
+     * @param chType Karakter típusa.
+     * @param size Karakter mérete.
+     * @param x Eltolás mértéke.
+     * @return ImageView amit visszaad.
+     */
     public ImageView setCharacterImage(Image chType, int size, int x){
         ImageView chImageView = new ImageView();
         Rectangle2D chRectangle = null;
@@ -271,6 +439,13 @@ public class GameBoard implements ControlledScreen {
 
         return chImageView;
     }
+
+    /**
+     * Cella képeinek beállítása.
+     * @param x Eltolás x paramétere
+     * @param y Eltolás y paramétere
+     * @return ImageView amit visszaad.
+     */
     public ImageView setCellImage(int x, int y){
         Rectangle2D cellRectangle = null;
         if(iceField.getCell(x, y).getSnow() == 0) {
@@ -303,6 +478,13 @@ public class GameBoard implements ControlledScreen {
 
         return cellImageView;
     }
+
+    /**
+     * Kapacitás képének beállítása.
+     * @param x Eltolás x paramétere
+     * @param y Eltolás y paramétere
+     * @return ImageView amit visszaad.
+     */
     public ImageView setCapacityImage(int x, int y){
         int capacity = iceField.getCell(x, y).getCapacity();
         if(capacity == iceField.getMaxPlayer()) capacity = 6;
@@ -318,6 +500,13 @@ public class GameBoard implements ControlledScreen {
 
         return capacityImageView;
     }
+
+    /**
+     * A sátor/igloo beállítása.
+     * @param x Eltolás x paramétere
+     * @param y Eltolás y paramétere
+     * @return ImageView amit visszaad.
+     */
     public ImageView setLidImage(int x, int y){
         Rectangle2D cellRectangle = null;
         if (iceField.getCell(x, y).itHasIgloo()) cellRectangle = new Rectangle2D(0, 0, 24, 20);
@@ -334,6 +523,11 @@ public class GameBoard implements ControlledScreen {
 
         return lidImageView;
     }
+
+    /**
+     * Medve képének beállítása.
+     * @return ImageView amit visszaad.
+     */
     public ImageView setBearImage(){
         ImageView bearImageView = new ImageView();
         bearImageView.setImage(bearImage);
@@ -343,6 +537,9 @@ public class GameBoard implements ControlledScreen {
         return bearImageView;
     }
 
+    /**
+     * Irányító felület összes képének beállítása.
+     */
     public void buildControlPanel(){
         setControlPanelImage(up, 0);
         setControlPanelImage(left, 1);
@@ -352,6 +549,10 @@ public class GameBoard implements ControlledScreen {
         setControlPanelImage(ability, 5);
         setControlPanelImage(menu, 6);
     }
+
+    /**
+     * Táska összes tárgyának képe beállítása.
+     */
     public void buildBackPack(){
         setItemsImage(availableItemsImage, pickaxe, 0);
 
@@ -392,6 +593,10 @@ public class GameBoard implements ControlledScreen {
         }
         else if(iceField.getActualPlayer().getBackPack().getEssentialItemNumber() == 3) setItemsImage(availableItemsImage, essentials, 7);
     }
+
+    /**
+     * Aktuális karakter képének és adatainak beállítása.
+     */
     public void buildActualPlayer(){
         actualPlayer.getChildren().clear();
         actualPlayer.add(setCharacterImage(chMaxImage, 7, iceField.getActualPlayerNumber()), 0, 0);
@@ -399,6 +604,10 @@ public class GameBoard implements ControlledScreen {
         actionLabel.setText(iceField.getActualPlayer().getActionsLeft() + "");
         bodyHeatLabel.setText(iceField.getActualPlayer().getBodyHeat()  + "" );
     }
+
+    /**
+     * Összes karakter képének beállíátsa.
+     */
     public void buildCharacters(){
         characters.getChildren().clear();
         int i = 0;
@@ -408,6 +617,10 @@ public class GameBoard implements ControlledScreen {
             if(i == iceField.getMaxPlayer()) break;
         };
     }
+
+    /**
+     * Pálya képeinek beállítása.
+     */
     public void buildField(){
         field = new GridPane();
         gameboard.getChildren().add(field);
@@ -422,6 +635,12 @@ public class GameBoard implements ControlledScreen {
             }
         }
     }
+
+    /**
+     *
+     * @param x X-edik cella
+     * @param y y-adik cella.
+     */
     public void buildCell(int x, int y){
         if(iceField.getCell(x, y).getPlayersFromCell().size() > 0) {
             cellCharacter = new GridPane();
@@ -464,6 +683,11 @@ public class GameBoard implements ControlledScreen {
         }
     }
 
+    /**
+     * Eltolásokból karaktereket ad vissza.
+     * @param ch Eltolás méreteinek listája
+     * @return Karaktereket ad vissza.
+     */
     public ArrayList<Character> countCharacters(ArrayList<Integer> ch){
         charactersShift = ch;
         ArrayList<Character> characters = new ArrayList<>();
@@ -477,14 +701,26 @@ public class GameBoard implements ControlledScreen {
         return characters;
     }
 
+    /**
+     * Beállítja az aktuális screent.
+     * @param actScreen Aktuális screen.
+     */
     @Override
     public void setActualScreen(ScreenController actScreen) { actualScreen = actScreen; }
+
+    /**
+     * Beállítja a következő képernyőt.
+     */
     @Override
     public void setNextField() {
         actualScreen.removeScreen(Main.gameboardID);
         actualScreen.loadScreen(Main.menuID, Main.menuFXML, null);
         actualScreen.setScreen(Main.menuID);
     }
+    /**
+     * Inicializáláskor elsőnek meghívódo fv a képernyőn.
+     * @param ch A GameBoard létrehozásakor szükséges átadni a létrehozott karakter listát.
+     */
     @Override
     public void initialize(ArrayList<Integer> ch) {
         iceField = new IceField(countCharacters(ch));

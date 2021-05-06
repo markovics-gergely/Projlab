@@ -9,9 +9,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import logic.characters.Character;
 
+/**
+ * Ez az osztály irányítja a képernyőket.
+ */
 public class ScreenController extends StackPane {
+    /**
+     * A screenek listája.
+     */
     private HashMap<String, Node> screens = new HashMap<>();
 
+    /**
+     * Létrehozza a paramtéreként kapott adatok szerint a következő screent.
+     * @param name Screen ID-ja
+     * @param fxml Screen FXML ID-ja
+     * @param ch A karakter lista a tovább töltéshez.
+     */
     public void loadScreen(String name, String fxml, ArrayList<Integer> ch) {
         try {
             FXMLLoader myLoader = new FXMLLoader(getClass().getResource(fxml));
@@ -25,6 +37,10 @@ public class ScreenController extends StackPane {
             System.out.println(e.getLocalizedMessage());
         }
     }
+    /**
+     * A létrehozott screen-t betölti.
+     * @param name Ezt az ID-t tölti be.
+     */
     public void setScreen(String name) {
         if (screens.get(name) != null) {
             getChildren().add(screens.get(name));
@@ -32,6 +48,9 @@ public class ScreenController extends StackPane {
         else
             System.out.println("Nem töltött be!");
     }
+    /**
+     * @param name A kapott ID-t kitröli.
+     */
     public void removeScreen(String name){
         if (screens.get(name) != null) {
             getChildren().removeAll(screens.get(name));

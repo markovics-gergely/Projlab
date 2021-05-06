@@ -6,6 +6,10 @@ public enum Way {
     down,
     left;
 
+    /**
+     * Visszaadja az ellenkező irányt annak, amin meghívták.
+     * @return  Visszaadja az ellenkező irányt annak, amin meghívták.
+     */
     public Way opposite(){
         switch(this) {
             case up: return down;
@@ -15,6 +19,13 @@ public enum Way {
             default: throw new IllegalStateException("Opposite Error");
         }
     }
+
+    /**
+     * Elforgatja 90 fokkal az irányt amin
+     * meghívták, a paraméter szerinti irányba.
+     * @param toRight jobbra vagy balra
+     * @return irány
+     */
     public Way rotate(boolean toRight){
         switch(this) {
             case up: return toRight ? right : left;

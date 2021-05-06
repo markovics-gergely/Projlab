@@ -1,6 +1,5 @@
 package logic;
 
-import logic.characters.Bear;
 import logic.characters.Character;
 import logic.icecells.IceCell;
 import logic.icecells.StableIceCell;
@@ -12,68 +11,63 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Ez az osztály képviseli az egész táblát, tárolja a mezőket, karaktereket és a játék
- * menetéhez kapcsolódó fontosabb információkat. (játék végkimenetele,
- * játékosszám, aktuális játékos)
- */
 public class IceField {
-	/**
-	 * 3-6 és közötti értéket vehet fel, a játékosok számát jelöli.
-	 */
 	private static int maxPlayer;
-	/**
-	 * Pálya mérete, mivel négyzet alakú és a
-	 * játékosok számától függ. Pl: 3 játékosnál a pálya mérete 7*7.
-	 */
 	private static int fieldLengths;
-	/**
-	 * Aktuális játékos sorszámát jelöli.
-	 */
 	private int currentPlayer = 0;
-	/**
-	 * A játék sikeres kimenetele esetén az értéke true-
-	 * ra változik, alaphelyzetben false.
-	 */
 	public boolean gameWon = false;
-	/**
-	 * A játék sikertelen kimenetele esetén az értéke
-	 * true-ra változik, alaphelyzetben false.
-	 */
 	public boolean gameLost = false;
-	/**
-	 * A vesztés szövege.
-	 */
-	public String gameLostString;
-	/**
-	 * A pályát jelöli ami IceCellekből épül fel. Lehet 7*7,
-	 * 8*8, 9*9 és 10*10-es a pálya.
-	 */
 	private List<List<IceCell>> field = new ArrayList<>();
-	/**
-	 * A karakterek listája. aminek maximális
-	 * mérete 6 lehet.
-	 */
 	private ArrayList<Character> characters;
-	/**
-	 * Ellenőrzi a nyerési feltételt, amennyiben egy játékos
-	 * kezdeményezi a pisztoly összeszerelését.
-	 */
 	private WinChecker wc = new WinChecker();
-	/**
-	 * Amikor egy kötéllel kimentünk egy embert, akkor ez az érték fog átváltozni a kimentendő karakter sorszámára.
-	 */
     private int chosenToSave = -1;
-	/**
-	 * A medvét jelképezi.
-	 */
-	private Bear bear;
 
+	private int[][] cellTable; //CSAK TESZT, KIKOMMENTELNI A configureCells() ELSŐ SORÁT ÉS KISZEDNI A KONSTRUKTORBÓL
+	private void drawField(){
+		System.out.println(currentPlayer+1 + ". játékos hátralévő munkája: " + characters.get(currentPlayer).getActionsLeft() + ", testhője: " + characters.get(currentPlayer).getBodyHeat() + " és vízben töltött köre: " + characters.get(currentPlayer).getTurnsInWater());
+		System.out.println(
+				"Ásó:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.shoveling) +
+				"  Kötél:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.savingWithRope) +
+				"  Ruha:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.wearingSuit) +
+				"  Étel:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.eating) +
+				"  Plusz:" + characters.get(currentPlayer).getBackPack().getNumber(PlayerActions.assemblingEssentials)
+		); //TÖRÖLNI A BACKPACK CLASSBÓL.
+		System.out.print("Típus 0:St 1:Víz"); System.out.println();
+		System.out.print("2:Inst 3:Item    ");
+		System.out.print("Karakterek       ");
+		System.out.print("Hóréteg          ");
+		System.out.print("Kapacitás        ");
+		System.out.print("Kap. Known       ");
+		System.out.print("Iglu             "); System.out.println();
+		for (int j = 0; j < fieldLengths; j++) {
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(cellTable[j][i] + " ");
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getPlayers() + " "); //CSAK TESZT, KISZEDNI a getPlayers()-t az IceCellből.
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getSnow() + " "); //CSAK TESZT, KISZEDNI a getSnow()-t az IceCellből.
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getCapacity() + " "); //CSAK TESZT, KISZEDNI a getCapacity()-t az IceCellből.
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getCapacityKnown() + " "); //CSAK TESZT, KISZEDNI a getCapacityKnown()-t az IceCellből.
+			System.out.print("   ");
+			for (int i = 0; i < fieldLengths; i++)
+				System.out.print(field.get(j).get(i).getIgloo() + " "); //CSAK TESZT, KISZEDNI a getIgloo()-t az IceCellből és leszármazottaiból.
+			System.out.println();
+		}
+		System.out.println();
+	} //CSAK TESZT, ÉS KISZEDNI AZ INPUT FV EK VÉGÉRŐL
 
 	public IceField(ArrayList<Character> c){
 		maxPlayer = c.size();
 		fieldLengths = maxPlayer + 4;
 		characters = c;
+
+		cellTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
 
 		buildCells();
 	}
@@ -83,7 +77,7 @@ public class IceField {
 		for(int y = 0; y < fieldLengths; y++)  {
 			List<IceCell> row = new ArrayList<>(fieldLengths);
 			for(int x = 0; x < fieldLengths; x++) {
-				row.add(new StableIceCell(this, null, null));
+				row.add(new StableIceCell(this, null));
 			}
 			field.add(row);
 		}
@@ -106,15 +100,8 @@ public class IceField {
 		if(x != fieldLengths - 1) ic.addNeighbour(Way.right, field.get(y).get(x + 1));
 	}
 	private void configureCells(int numberOfWater, int numberOfUnstable) {
-		int[][] cellTable = new int[fieldLengths][fieldLengths];
+		//int[][] cellTable = new int[fieldLengths][fieldLengths]; //CSAK TESZT
 
-		putWaterToCell(numberOfWater, cellTable);
-		putUnstableToCell(numberOfUnstable, cellTable);
-		putItemsToCell(cellTable);
-		putBearToCell();
-		putPlayersToCell();
-	}
-	private void putWaterToCell(int numberOfWater, int[][] cellTable){
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
@@ -148,12 +135,9 @@ public class IceField {
 						water.getNeighbour(w).addNeighbour(w.opposite(), water);
 				}
 			}
+
+			connected = 0;
 		}
-	}
-	private void putUnstableToCell(int numberOfUnstable, int[][] cellTable){
-		Random random = new Random();
-		int x = random.nextInt(fieldLengths);
-		int y = random.nextInt(fieldLengths);
 
 		for(int i = 0; i < numberOfUnstable; i++){
 			while(cellTable[y][x] != 0){
@@ -169,11 +153,6 @@ public class IceField {
 			}
 			cellTable[y][x] = 2;
 		}
-	}
-	private void putItemsToCell(int[][] cellTable){
-		Random random = new Random();
-		int x = random.nextInt(fieldLengths);
-		int y = random.nextInt(fieldLengths);
 
 		int essentialID = 0;
 		for (PlayerActions pa : PlayerActions.values()) {
@@ -189,33 +168,16 @@ public class IceField {
 				if(pa == PlayerActions.assemblingEssentials) essentialID++;
 			}
 		}
-	}
-	private void putBearToCell(){
-		Random random = new Random();
-		int x = random.nextInt(fieldLengths);
-		int y = random.nextInt(fieldLengths);
+		putPlayersToCell();
 
-		bear = new Bear(field.get(y).get(x));
-		while(!field.get(y).get(x).acceptBear(bear)){
-			x = random.nextInt(fieldLengths);
-			y = random.nextInt(fieldLengths);
-			bear = new Bear(field.get(y).get(x));
-		}
-	}
+		drawField(); //CSAK TESZT
+	} //VAN BENNE drawField();
 	private void putPlayersToCell() {
-		int bearX = -1, bearY = -1;
-		for(int i = 0; i < fieldLengths; i++)
-			for(int j = 0; j < fieldLengths; j++)
-				if(field.get(j).get(i).hasBear()){
-					bearX = i; bearY = j;
-					break;
-				}
-
 		Random random = new Random();
 		int x = random.nextInt(fieldLengths);
 		int y = random.nextInt(fieldLengths);
 
-		while(!field.get(y).get(x).safeToStart() || (Math.abs(bearX - x) < maxPlayer && Math.abs(bearY - y) < maxPlayer)){
+		while(!field.get(y).get(x).safeToStart()){
 			x = random.nextInt(fieldLengths);
 			y = random.nextInt(fieldLengths);
 		}
@@ -226,17 +188,14 @@ public class IceField {
 	}
 	private void placeItem(PlayerActions pa, int y, int x, int essentialID){
 		Items item;
-		PlayerActions playerAct;
 		switch (pa){
-			case eating: item = new Food(); playerAct = PlayerActions.eating; break;
-			case shoveling: item = new Shovel(); playerAct = PlayerActions.shoveling; break;
-			case wearingSuit: item = new Divingsuit(); playerAct = PlayerActions.wearingSuit; break;
-			case savingWithRope: item = new Rope(); playerAct = PlayerActions.savingWithRope; break;
-			case fragileshoveling: item = new FragileShovel(); playerAct = PlayerActions.fragileshoveling; break;
-			case setUpTent: item = new Tent(); playerAct = PlayerActions.setUpTent; break;
-			default: item = new EssentialItem(essentialID, wc); playerAct = PlayerActions.assemblingEssentials; break;
+			case eating: item = new Food(); break;
+			case shoveling: item = new Shovel(); break;
+			case wearingSuit: item = new Divingsuit(); break;
+			case savingWithRope: item = new Rope(); break;
+			default: item = new EssentialItem(essentialID, wc); break;
 		}
-		StableIceCell newCell = new StableIceCell(this, item, playerAct);
+		StableIceCell newCell = new StableIceCell(this, item);
 		buildNeighbours(newCell, y, x);
 		for(Way w : Way.values()){
 			if(newCell.getNeighbour(w) != null)
@@ -259,17 +218,13 @@ public class IceField {
 	}
 
 	//Pálya működését szolgáló fv-ek
-	/**
-	 * Egy random középponttal a pályán, ezután választ egy véletlenszerű sugarat, 2 és a pálya szélessége felfele kerekítve között.
-	 * Ezen a területen növeli a hóréteget eggyel, vagy ha van rajta igloo akkor azt törli.
-	 */
 	private void snowStorm() {
 		Random r = new Random();
 		int x = r.nextInt(fieldLengths);
 		int y = r.nextInt(fieldLengths);
 		IceCell rootCell = field.get(y).get(x);
-
 		int radius = (int)(Math.ceil(((double)fieldLengths)/2));
+
 		rootCell.snowing();
 		int i = 0;
 		for(Way w : Way.values()){
@@ -287,11 +242,6 @@ public class IceField {
 			snow(seqNum - 1, to.rotate(false), from.getNeighbour(to.rotate(false)), false);
 		}
 	}
-	/**
-	 * Ha tartalmazza a pálya az adott törlendő cellát akkor átalakítja azzá amit első paraméterként megkap.
-	 * @param ic
-	 * @param removed
-	 */
 	public void addIceCell(IceCell ic, IceCell removed) {
 		for(int j = 0; j < fieldLengths; j++)
 			if(field.get(j).contains(removed)){
@@ -300,35 +250,19 @@ public class IceField {
 				field.get(j).add(i, ic);
 			}
 	}
-	/**
-	 *  A gameLost attribútumot truevá rakja.
-	 */
-	public void gameLost(String s) { gameLostString = s; gameLost = true; }
-	/**
-	 * A gameWon attribútumot truevá rakja.
-	 */
-	public void gameWon() { gameWon = true; }
-	/**
-	 * Ha 0 munkája van hátra vagy több mint 0 kör óta vízben van akkor meghívja a nextPlayert. Ez a függvény minden munkát végző IceFieldben lévő függvény végén hívódik meg.
-	 */
+	private void gameLost() { gameLost = true; }
+	private void gameWon() { gameWon = true; }
 	private void actionHandler(){
-		if(characters.get(currentPlayer).getActionsLeft() == 0 || characters.get(currentPlayer).getTurnsInWater() != 0)
+		if(characters.get(currentPlayer).getActionsLeft() == 0 || characters.get(currentPlayer).getTurnsInWater() != 0){
 			nextPlayer();
+		}
 	}
 	public static int getMaxPlayer(){ return maxPlayer; }
 
 	//Inputra reagáló fv-ek //VANNAK BENNE drawField() ek
-	/**
-	 * Ha nagyobb az i mint 0 és kisebb mint maxPlayer akkor beálíltja a chosenToSave értékét i re.
-	 * @param i kiválasztott karakter indexe
-	 */
 	public void setChosenToSave(int i){
 		if(i >= 0 && i < maxPlayer) chosenToSave = i;
 	}
-	/**
-	 * Ha az alapértékkel egyenlő (-1) akkor null-t ad vissza, egyébként az adott indexű játékost. A végén visszarakja az attribútum értékét -1 re.
-	 * @return Ha az alapértékkel egyenlő (-1) akkor null-t ad vissza, egyébként az adott indexű játékost
-	 */
 	public Character getChosenToSave(){
 		if(chosenToSave == -1) return null;
 		Character c = characters.get(chosenToSave);
@@ -336,48 +270,29 @@ public class IceField {
 
 		return c;
 	}
-	/**
-	 * Az elején, visszarakja a még aktuális játékos munkáját 4 re, és mozgatja a medvét.
-	 * Aztán meghívja a hóvihart 20% os eséllyel. Majd minden vízben lévő játékos vízben töltött körét növeli eggyel
-	 * és minden játékosra megnézi, hogy a testhője 0-e vagy a vízben töltött ideje búvárruha nélkül meghaladja-e a maximálisat, mert akkor vége a játéknak.
-	 * Majd törli az összes sátort a pályáról. Végül leellenőrzi, hogy mindenki vízben van-e és ha  nem akkor növeli az aktuális játékos számát eggyel.
-	 */
 	public void nextPlayer() {
 		characters.get(currentPlayer).resetActionsLeft();
-		bear.move();
 
 		Random r = new Random();
-		int i = r.nextInt(5);
-		if (i == 0) snowStorm();
+		int i = r.nextInt(4);
+		//if (i == 0) snowStorm();
 
 		for(Character c : characters){
 			if(c.getTurnsInWater() != 0)
 				c.addOneTurnInWater();
-			if(c.getBodyHeat() == 0)
-				gameLost("A testhőmérsékletetek lecsökkent 0-ra!");
-			if(c.getTurnsInWater() > maxPlayer && !c.getDivingSuit())
-				gameLost("Túl régóta estetek vízbe!");
+			if(c.getBodyHeat() == 0 || (c.getTurnsInWater() > maxPlayer && !c.getDivingSuit()))
+				gameLost();
 		}
-
-		for (int y = 0; y < fieldLengths; y++) {
-			for (int x = 0; x < fieldLengths; x++) {
-				if (field.get(y).get(x).getTentTurnsLeft() > 0) {
-					field.get(y).get(x).loseOneTentTurn();
-				}
-			}
-		}
-
-		int countAll;
-		for(countAll = 0; countAll != maxPlayer; countAll++){
+		//Ezt nem fix hogy jó, de az unstable miatt került bele, nem lépett ki unstablenél.
+		int countAll = 0;
+		do {
 			currentPlayer = (currentPlayer + 1 == maxPlayer) ? 0 : (currentPlayer + 1);
-			if(characters.get(currentPlayer).getTurnsInWater() == 0) break;
-		}
-		if(countAll == maxPlayer)
-			gameLost("Rálépetetek egyszerre egy instabil cellára!");
+			countAll++;
+			if(countAll == maxPlayer){ gameLost(); break; }
+		} while(characters.get(currentPlayer).getTurnsInWater() != 0);
+
+		drawField();
 	}
-	/**
-	 * Először megnézi, hogy egy cellán állnak-e, ha nem akkor visszatér simán. Ha egy cellán vannak összeadja az összes karakter essentialItemjét, ha megvan mind akkor nyertek.
-	 */
 	private void useEssentialItems() {
 		IceCell ic = characters.get(0).getOwnCell();
 
@@ -396,53 +311,37 @@ public class IceField {
 		else wc.resetAssembledItems();
 
 		actionHandler();
+
+		drawField(); //CSAK TESZT
 	}
-	/**
-	 * Beállítja az adott játékos nézési irányát.
-	 * @param w irány beállítása
-	 */
 	public void setPlayerWay(Way w) {
 		characters.get(currentPlayer).setFacingWay(w);
 	}
-
-	/**
-	 * Ha a paraméter egy essentialItem, meghívja a privét useEssentialItems() függvényt. Egyébként a useItem() függvényt az aktuális karakteren.
-	 * @param pa tárgy típusa amit használ
-	 */
 	public void usePlayerItem(PlayerActions pa) {
 		if(pa == PlayerActions.assemblingEssentials) useEssentialItems();
 		else characters.get(currentPlayer).useItem(pa);
 
 		actionHandler();
+
+		drawField(); //CSAK TESZT
 	}
-	/**
-	 * Meghívja a képesség használatát az aktuális játékosra.
-	 */
 	public void useAbility() {
 		characters.get(currentPlayer).ability();
 		actionHandler();
+
+		drawField(); //CSAK TESZT
 	}
-	/**
-	 * Az adott irányba beállítja az aktuális játékos nézési irányát. Majd meghívja a karakteren a move() függvényt.
-	 * @param w adott irányba lépés
-	 */
 	public void movePlayer(Way w) {
 		setPlayerWay(w);
 		characters.get(currentPlayer).move();
 		actionHandler();
+
+		drawField(); //CSAK TESZT
 	}
-	/**
-	 * Meghívja az adott karakter mine() függvényét.
-	 */
 	public void mineActualCell() {
 		characters.get(currentPlayer).mine();
 		actionHandler();
-	}
 
-	//Kirajzolást segító függvények
-	public int getFieldLength(){ return fieldLengths; }
-	public IceCell getCell(int x, int y){ return field.get(y).get(x); }
-	public int getActualPlayerNumber(){ return currentPlayer; }
-	public Character getActualPlayer(){ return characters.get(currentPlayer); }
-	public Character getPlayersFromField(int i){ return characters.get(i); }
+		drawField(); //CSAK TESZT
+	}
 }

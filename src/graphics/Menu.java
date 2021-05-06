@@ -17,26 +17,56 @@ import logic.characters.Explorer;
 import logic.characters.Character;
 import java.util.ArrayList;
 
+/**
+ * Ez az osztály felel a menü megjelenítésért, ahol ki lehet választani a karaktereket.
+ */
 public class Menu implements ControlledScreen {
+    /**
+     * Az játék elindításához szolgáló gomb.
+     */
     @FXML
     private Button start = new Button();
+    /**
+     * Az eskimo karakter kiválasztására szolgáló gomb.
+     */
     @FXML
     private Button eskimo = new Button();
+    /**
+     * Az explorer karakter kiválasztására szolgáló gomb.
+     */
     @FXML
     private Button explorer = new Button();
+    /**
+     * A kiválasztott karakterek megjelenítésére szolgáló felület.
+     */
     @FXML
     private GridPane chosenCharacters = new GridPane();
+    /**
+     * A képek a megjelenítéshez.
+     */
     Image chBigImage = new Image("charactersBig.png");
     Image chMaxImage = new Image("charactersMax.png");
     Image startImage = new Image("start.png");
 
+    /**
+     * A saját screenjét tárolja.
+     */
     private ScreenController actualScreen;
+    /**
+     * Lista a karakterek eltolásáról, amik ki lettek választva.
+     */
     private ArrayList<Integer> characterShift = new ArrayList<>();
 
+    /**
+     * A start button implementációja. Továbblép a következő felületre, a játékba.
+     */
     @FXML
     private void startAction(){
         setNextField();
     }
+    /**
+     * Az eskimo kiválasztásának implementációja.
+     */
     @FXML
     private void eskimoAction(){
         if(characterShift.size() == 2)
@@ -53,6 +83,9 @@ public class Menu implements ControlledScreen {
             explorer.setVisible(false);
         }
     }
+    /**
+     * Az explorer kiválasztásának implementációja.
+     */
     @FXML
     private void explorerAction(){
         if(characterShift.size() == 2)
@@ -70,6 +103,12 @@ public class Menu implements ControlledScreen {
         }
     }
 
+    /**
+     * Létrehozza az Eskimo képét.
+     * @param i Paraméter a karakter színének meghatározására a képből.
+     * @param size A karakter mérete.
+     * @return A karakterhez tartozó ImageView
+     */
     private ImageView changeEskimoImage(int i, int size){
         ImageView iv = new ImageView();
         iv.setViewport(new Rectangle2D((characterShift.size()-i)*18*size*2,0,18*size,30*size));
@@ -78,6 +117,12 @@ public class Menu implements ControlledScreen {
 
         return iv;
     }
+    /**
+     * Létrehozza az Explorer képét.
+     * @param i Paraméter a karakter színének meghatározására a képből.
+     * @param size A karakter mérete.
+     * @return A karakterhez tartozó ImageView
+     */
     private ImageView changeExplorerImage(int i, int size){
         ImageView iv = new ImageView();
         iv.setViewport(new Rectangle2D((characterShift.size()-i)*18*size*2+18*size,0,18*size,30*size));
@@ -87,16 +132,27 @@ public class Menu implements ControlledScreen {
         return iv;
     }
 
+    /**
+     * Beállítja az aktuális screent.
+     * @param actScreen Aktuális screen.
+     */
     @Override
     public void setActualScreen(ScreenController actScreen) {
         actualScreen = actScreen;
     }
+    /**
+     * Beállítja a következő képernyőt.
+     */
     @Override
     public void setNextField() {
         actualScreen.removeScreen(Main.menuID);
         actualScreen.loadScreen(Main.gameboardID, Main.gameboardFXML, characterShift);
         actualScreen.setScreen(Main.gameboardID);
     }
+    /**
+     * Inicializáláskor elsőnek meghívódo fv a képernyőn.
+     * @param ch A GameBoard létrehozásakor szükséges átadni a létrehozott karakter listát.
+     */
     @Override
     public void initialize(ArrayList<Integer> ch) {
         start.setVisible(false);

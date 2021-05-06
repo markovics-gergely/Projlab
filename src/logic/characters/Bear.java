@@ -6,7 +6,13 @@ import logic.icecells.IceCell;
 
 import java.util.Random;
 
+/**
+ * A pályán mozgó jegesmedvét valósítja meg, amivel ha a játékosok egy mezőre kerülnek, akkor megeszi őket.
+ */
 public class Bear {
+    /**
+     * A medve saját mezőjét ebben az attribútumban tároljuk.
+     */
     private IceCell ownCell;
 
     public Bear(IceCell ownc){
@@ -14,6 +20,9 @@ public class Bear {
         ownCell.acceptBear(this);
     }
 
+    /**
+     * Lépteti a medvét egy random irányba, és eltávolítja az aktuális mezejéről.
+     */
     public void move(){
         Random r = new Random();
         boolean accepted = false;

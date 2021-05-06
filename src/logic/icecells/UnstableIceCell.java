@@ -6,8 +6,17 @@ import logic.characters.Bear;
 import logic.characters.Character;
 import logic.items.Items;
 
+/**
+ * Instabil típusú cellát valósít meg. Ha ilyen típusú cellára a kapacitásánál több karakter lép, akkor beszakad, és a rajta lévő karakterek vízbe kerülnek.
+ */
 public class UnstableIceCell extends IceCell  {
+	/**
+	 * Megadja, hogy a cellán van-e építve iglu
+	 */
 	private boolean hasIgloo = false;
+	/**
+	 * Megadja, hogy a cellán található-e sátor, és hogy hány kör múlva tűnik el. Ha 0, akkor nincs rajta sátor.
+	 */
 	private int tentTurnsLeft = 0;
 
 
@@ -15,7 +24,15 @@ public class UnstableIceCell extends IceCell  {
 		super(c, icef);
 	}
 
+
+	/**
+	 * Rajta lévő sátor hátralévő köreinek csökkentése eggyel.
+	 */
 	public void loseOneTentTurn(){ tentTurnsLeft--; }
+	/**
+	 * Sátor telepítése a cellán.
+	 * @return Hamissal tér vissza, ha már ugyanez a játékos rakott már ebben a körben le sátrat.
+	 */
 	public boolean setUpTent() {
 		if(tentTurnsLeft == IceField.getMaxPlayer() || hasIgloo) return false;
 		else {
@@ -23,7 +40,15 @@ public class UnstableIceCell extends IceCell  {
 			return true;
 		}
 	}
+	/**
+	 * Rajta lévő sátor hátra lévő köreinek számát visszaállítja 0-ra.
+	 */
 	public void resetTentTurnsLeft() { tentTurnsLeft = 0; }
+	/**
+	 * Iglu építése
+	 * @param b Igaz, ha építeni, hamis, ha rombolni akarjuk az iglut
+	 * @return Visszaadja, hogy lehetett-e építeni vagy rombolni
+	 */
 	public boolean setIgloo(boolean b) {
 		if(hasIgloo == b || tentTurnsLeft > 0) return false;
 		else {
@@ -31,6 +56,9 @@ public class UnstableIceCell extends IceCell  {
 			return true;
 		}
 	}
+	/**
+	 * Egy hóréteg hozzáadása, és ha nincs rajta iglu vagy sátor, akkor a rajta álló játékosok elvesztenek egy testhőt.
+	 */
 	public void snowing() {
 		gainOneSnow();
 		if(!hasIgloo && tentTurnsLeft == 0){
@@ -42,6 +70,11 @@ public class UnstableIceCell extends IceCell  {
 		else if(hasIgloo) setIgloo(false);
 		else if (tentTurnsLeft != 0) resetTentTurnsLeft();
 	}
+	/**
+	 * Paraméterül kapott játékos befogadása a cellára. Ha volt rajta medve, akkor vége a játéknak.
+	 * Ha a kapacitás feletti játékos van rajta, akkor WaterCellé válik.
+	 * @param ch Cellára lépő játékos
+	 */
 	public void accept(Character ch) {
 		addCharacter(ch);
 		ch.setOwnCell(this);
@@ -66,6 +99,12 @@ public class UnstableIceCell extends IceCell  {
 		if(bear != null)
 			ownField.gameLost("Megtámadott a medve!");
 	}
+
+	/**
+	 * Paraméterül kapott medve befogadása a cellára. Ha voltak a cellán játékosok, akkor vége a játéknak.
+	 * @param b Cellára lépő medve
+	 * @return Mindig igaz UnStableIceCellben
+	 */
 	public boolean acceptBear(Bear b){
 		bear = b;
 		b.setOwnCell(this);
